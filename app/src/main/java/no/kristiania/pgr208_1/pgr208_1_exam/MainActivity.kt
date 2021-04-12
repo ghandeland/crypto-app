@@ -15,13 +15,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        initObservers()
+
+
+
+//        initObservers()
 
     }
 
-    private fun initObservers() {
-        viewModel.assets.observe(this) { assets ->
-            binding.tv1.text = assets[0].name
-        }
-    }
+//    private fun initObservers() {
+//        viewModel.assets.observe(this) { assets ->
+//            binding. = assets[0].name
+//        }
+//    }
 }

@@ -49,6 +49,8 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
+    // All dependencies below are added in addition to the default dependencies
+
     // Viewmodel / Livedata / Activity
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.3.1"
@@ -63,6 +65,8 @@ dependencies {
     implementation "com.squareup.moshi:moshi-kotlin:1.11.0"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:1.11.0"
 
+    // Recyclerview
+    implementation "androidx.recyclerview:recyclerview:1.2.0"
 
 
 }
