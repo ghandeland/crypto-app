@@ -49,7 +49,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    // All dependencies below are added in addition to the default dependencies
+    // All dependencies below are added in addition to the default project dependencies
 
     // Viewmodel / Livedata / Activity
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
