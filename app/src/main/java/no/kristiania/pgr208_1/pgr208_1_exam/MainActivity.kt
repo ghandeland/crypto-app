@@ -22,7 +22,6 @@ class MainActivity : AppCompatActivity() {
             adapter.setCurrencyList(currencies)
         }
 
-
         binding.rvCurrencies.adapter = adapter
         binding.rvCurrencies.layoutManager = LinearLayoutManager(this)
     }
