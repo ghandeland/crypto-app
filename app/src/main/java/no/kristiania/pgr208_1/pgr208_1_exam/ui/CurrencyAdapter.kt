@@ -11,8 +11,10 @@ import no.kristiania.pgr208_1.pgr208_1_exam.databinding.ItemCurrencyBinding
 
 
 // Adapter for listing the currency objects with Recyclerview
-class CurrencyAdapter(var currencies: List<CryptoCurrency> ) :
+class CurrencyAdapter() :
     RecyclerView.Adapter<CurrencyAdapter.CurrencyViewHolder>() {
+
+    private val currencies = mutableListOf<CryptoCurrency>()
 
     inner class CurrencyViewHolder(val binding: ItemCurrencyBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(currency: CryptoCurrency) {
@@ -31,6 +33,12 @@ class CurrencyAdapter(var currencies: List<CryptoCurrency> ) :
 
     override fun getItemCount(): Int {
         return currencies.size
+    }
+
+    fun setCurrencyList(list: List<CryptoCurrency>) {
+        currencies.clear()
+        currencies.addAll(list)
+        notifyDataSetChanged()
     }
 
 

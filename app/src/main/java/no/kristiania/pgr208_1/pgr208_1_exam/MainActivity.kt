@@ -2,14 +2,16 @@ package no.kristiania.pgr208_1.pgr208_1_exam
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import no.kristiania.pgr208_1.pgr208_1_exam.databinding.ActivityMainBinding
+import no.kristiania.pgr208_1.pgr208_1_exam.ui.CurrencyAdapter
 
 class MainActivity : AppCompatActivity() {
 
     val viewModel: MainViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding
+    private val adapter = CurrencyAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,14 +19,16 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
+        viewModel.currencies.observe(this) { currencies ->
+            adapter.setCurrencyList(currencies)
+        }
 
-//        initObservers()
 
+        binding.rvCurrencies.adapter = adapter
+        binding.rvCurrencies.layoutManager = LinearLayoutManager(this)
     }
 
-//    private fun initObservers() {
-//        viewModel.assets.observe(this) { assets ->
-//            binding. = assets[0].name
-//        }
-//    }
+    private fun initObservers() {
+
+    }
 }
