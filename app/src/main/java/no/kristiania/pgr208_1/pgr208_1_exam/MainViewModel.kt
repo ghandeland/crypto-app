@@ -29,7 +29,7 @@ class MainViewModel : ViewModel() {
         reload()
     }
 
-    private fun reload() {
+    fun reload() {
         loadAssets()
     }
 

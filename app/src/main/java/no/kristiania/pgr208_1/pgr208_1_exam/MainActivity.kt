@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        viewModel.reload()
 
         viewModel.currencies.observe(this) { currencies ->
             adapter.setCurrencyList(currencies)
@@ -28,7 +29,5 @@ class MainActivity : AppCompatActivity() {
         binding.rvCurrencies.layoutManager = LinearLayoutManager(this)
     }
 
-    private fun initObservers() {
 
-    }
 }
