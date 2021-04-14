@@ -1,10 +1,12 @@
 package no.kristiania.pgr208_1.pgr208_1_exam.ui
 
+import android.content.Context
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import no.kristiania.pgr208_1.pgr208_1_exam.R
 import no.kristiania.pgr208_1.pgr208_1_exam.data.domain.CryptoCurrency
 import no.kristiania.pgr208_1.pgr208_1_exam.databinding.ItemCurrencyBinding
@@ -19,8 +21,16 @@ class CurrencyAdapter() :
 
     private val currencies = mutableListOf<CryptoCurrency>()
 
-    inner class CurrencyViewHolder(val binding: ItemCurrencyBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class CurrencyViewHolder(val binding: ItemCurrencyBinding, val context: Context) : RecyclerView.ViewHolder(binding.root) {
+        // TODO: Encapsulate the function statements with a scope function?
         fun bind(currency: CryptoCurrency) {
+
+            Glide
+                    .with(context)
+                    .load("https://static.coincap.io/assets/icons/${currency.symbol.toLowerCase()}@2x.png")
+                    .into(binding.ivLogo)
+
+
             binding.tvName.text = currency.name
             binding.tvSymbol.text = currency.symbol
 
@@ -60,7 +70,7 @@ class CurrencyAdapter() :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CurrencyViewHolder {
-        return CurrencyViewHolder(ItemCurrencyBinding.inflate(LayoutInflater.from(parent.context)))
+        return CurrencyViewHolder(ItemCurrencyBinding.inflate(LayoutInflater.from(parent.context)), parent.context)
     }
 
     override fun onBindViewHolder(holder: CurrencyViewHolder, position: Int) {
