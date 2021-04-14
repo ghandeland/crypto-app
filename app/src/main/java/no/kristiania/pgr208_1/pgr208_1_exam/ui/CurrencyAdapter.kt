@@ -1,17 +1,14 @@
 package no.kristiania.pgr208_1.pgr208_1_exam.ui
 
-import android.content.ClipData
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import no.kristiania.pgr208_1.pgr208_1_exam.R
 import no.kristiania.pgr208_1.pgr208_1_exam.data.domain.CryptoCurrency
 import no.kristiania.pgr208_1.pgr208_1_exam.databinding.ItemCurrencyBinding
 import java.lang.Double.parseDouble
-import java.lang.Float.parseFloat
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -27,14 +24,18 @@ class CurrencyAdapter() :
             binding.tvName.text = currency.name
             binding.tvSymbol.text = currency.symbol
 
+            // TODO: Parse price and list amount of decimal numbers accordingly
+            val price = parseDouble(currency.priceUsd)
+            val priceRounded = BigDecimal(price).setScale(2, RoundingMode.HALF_EVEN)
+            binding.tvPrice.text = "$priceRounded$"
 
 
             // Parse the large percentage string to a double, then round it down correctly using java.math.BigDecimal
             val percentage =  parseDouble(currency.changePercent24Hr)
-            val decimal = BigDecimal(percentage).setScale(2, RoundingMode.HALF_EVEN).toDouble()
-            binding.tvPercentage.text = "$decimal%"
+            val percentageRounded = BigDecimal(percentage).setScale(2, RoundingMode.HALF_EVEN).toDouble()
+            binding.tvPercentage.text = "$percentageRounded%"
             when {
-                decimal > 0 -> {
+                percentageRounded > 0 -> {
                     binding.apply {
                         tvPercentage.setTextColor(Color.parseColor("#1ebf06"))
                         ivArrow.setImageResource(R.drawable.ic_arrow_gr)
@@ -42,7 +43,7 @@ class CurrencyAdapter() :
                     }
 
                 }
-                decimal < 0 -> {
+                percentageRounded < 0 -> {
                     binding.apply {
                         tvPercentage.setTextColor(Color.parseColor("#cc0700"))
                         ivArrow.setImageResource(R.drawable.ic_arrow_re)

@@ -4,6 +4,12 @@ buildscript {
     repositories {
         google()
         jcenter()
+
+        // All repositories below are added in addition to the default project setup
+
+        // Maven Central for Glide
+        mavenCentral()
+
     }
     dependencies {
         classpath "com.android.tools.build:gradle:4.1.1"
