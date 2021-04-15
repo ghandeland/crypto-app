@@ -11,14 +11,16 @@ import no.kristiania.pgr208_1.pgr208_1_exam.ui.CurrencyAdapter
 
 class MainActivity : AppCompatActivity() {
 
-    val viewModel: MainViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding
+
+    private val viewModel: MainViewModel by viewModels()
     private val adapter = CurrencyAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        viewModel.init(this)
 
         viewModel.currencies.observe(this) { currencies ->
             adapter.setCurrencyList(currencies)

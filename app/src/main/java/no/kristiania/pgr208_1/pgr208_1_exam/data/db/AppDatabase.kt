@@ -4,13 +4,15 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import no.kristiania.pgr208_1.pgr208_1_exam.data.db.entity.Balance
+import no.kristiania.pgr208_1.pgr208_1_exam.data.db.entity.BalanceTransaction
+import no.kristiania.pgr208_1.pgr208_1_exam.data.db.entity.WalletCurrency
 
 const val DATABASE_NAME = "crypto_app_db"
 
-@Database(entities = arrayOf(Balance::class), version = 1)
+@Database(entities = [WalletCurrency::class, BalanceTransaction::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun balanceDao() : BalanceDao
+    abstract fun balanceDao() : WalletCurrencyDao
+    abstract fun balanceTransactionDao() : BalanceTransactionDao
 
     companion object {
         private var db: AppDatabase? = null
@@ -24,5 +26,4 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
     }
-
 }

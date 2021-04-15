@@ -4,8 +4,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
-data class Balance (
-    @PrimaryKey val balanceId: Int,
-    @ColumnInfo(name = "balance_value") val balanceValue: Double
+@Entity(tableName = "wallet_currency_table")
+data class WalletCurrency (
+    @PrimaryKey
+    val currencyCode: String,
+    val amount: Double
 )
