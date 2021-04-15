@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import no.kristiania.pgr208_1.pgr208_1_exam.R
-import no.kristiania.pgr208_1.pgr208_1_exam.data.domain.CryptoCurrency
+import no.kristiania.pgr208_1.pgr208_1_exam.data.api.domain.CryptoCurrency
 import no.kristiania.pgr208_1.pgr208_1_exam.databinding.ItemCurrencyBinding
 import java.lang.Double.parseDouble
 import java.math.BigDecimal

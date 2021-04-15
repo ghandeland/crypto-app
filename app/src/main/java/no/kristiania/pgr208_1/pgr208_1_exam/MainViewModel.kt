@@ -1,6 +1,5 @@
 package no.kristiania.pgr208_1.pgr208_1_exam
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,9 +7,9 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import no.kristiania.pgr208_1.pgr208_1_exam.data.API
-import no.kristiania.pgr208_1.pgr208_1_exam.data.CoinCapService
-import no.kristiania.pgr208_1.pgr208_1_exam.data.domain.CryptoCurrency
+import no.kristiania.pgr208_1.pgr208_1_exam.data.api.API
+import no.kristiania.pgr208_1.pgr208_1_exam.data.api.CoinCapService
+import no.kristiania.pgr208_1.pgr208_1_exam.data.api.domain.CryptoCurrency
 
 class MainViewModel : ViewModel() {
     val coinCapService: CoinCapService = API.coinCapService
