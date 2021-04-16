@@ -1,6 +1,7 @@
 package no.kristiania.pgr208_1.pgr208_1_exam
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -31,6 +32,8 @@ class MainViewModel : ViewModel() {
     private val _error = MutableLiveData<Unit>()
     val error: LiveData<Unit> get() = _error
 
+    private val _balance = MutableLiveData<Double>()
+    val balance: LiveData<Double> get() = _balance
 
     private val exceptionHandler = CoroutineExceptionHandler { _, _ ->
         _error.postValue(Unit)
@@ -57,8 +60,27 @@ class MainViewModel : ViewModel() {
     fun makeInitialDeposit() {
         viewModelScope.launch {
             try {
+
                 walletCurrencyDao.insert(WalletCurrency(currencyCode = "usd", amount = 10_000.0))
+                val usdBalance = walletCurrencyDao.getCurrency("usd")
+                _balance.postValue(usdBalance.amount);
+                Log.d("db", usdBalance.amount.toString())
             } catch (e: Exception) {
+                e.printStackTrace()
+                Log.d("db", "catchInit")
+            } finally {
+                Log.d("db", "finallyInit")
+            }
+        }
+    }
+
+    fun calculateBalanceInUsd() {
+        viewModelScope.launch {
+            try {
+                val usdBalance = walletCurrencyDao.getCurrency("usd")
+                _balance.postValue(usdBalance.amount);
+            } catch (e: Exception) {
+                Log.d("db", e.toString())
                 e.printStackTrace()
             }
         }

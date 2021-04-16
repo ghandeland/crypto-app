@@ -21,10 +21,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         viewModel.init(this)
+        initObservers()
 
-        viewModel.currencies.observe(this) { currencies ->
-            adapter.setCurrencyList(currencies)
-        }
+        viewModel.calculateBalanceInUsd()
+
+
 
         // Using the Recyclerview with LinearLayoutManager produced a bug where the individual item width did not fill the parent, therefore it is replaced here with GridLayoutManager
         // https://stackoverflow.com/questions/35904409/item-in-recyclerview-not-filling-its-width-match-parent
@@ -32,6 +33,16 @@ class MainActivity : AppCompatActivity() {
 
         binding.rvCurrencies.adapter = adapter
         binding.rvCurrencies.layoutManager = GridLayoutManager(this, 1)
+    }
+
+    private fun initObservers() {
+        viewModel.currencies.observe(this) { currencies ->
+            adapter.setCurrencyList(currencies)
+        }
+
+        viewModel.balance.observe(this) { balance ->
+            binding.tvBalance.text = "Balance: $balance USD"
+        }
     }
 
     override fun onResume() {

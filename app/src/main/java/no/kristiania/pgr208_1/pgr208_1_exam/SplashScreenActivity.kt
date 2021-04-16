@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import androidx.activity.viewModels
 import no.kristiania.pgr208_1.pgr208_1_exam.databinding.ActivitySplashScreenBinding
@@ -23,12 +24,18 @@ class SplashScreenActivity : AppCompatActivity() {
         setContentView(binding.root)
         viewModel.init(this) // Init Viewmodel for initial DB setup
 
+        // Temporary toggle call to test first installation
+        // toggleTransaction(true)
+
         // Check shared preferences for flag that indicates if initial transaction to DB should be executed
         val sharedPref = getPreferences(Context.MODE_PRIVATE) ?: return
         val makeInitialTransaction = sharedPref.getBoolean(TRANSACTION_FLAG_KEY, true)
 
+        Log.d("db", makeInitialTransaction.toString())
+
+        // If stored key is not found or true, make the initial deposit to the DB
         if(makeInitialTransaction) {
-            makeTransaction()
+            viewModel.makeInitialDeposit()
             toggleTransaction(false)
         }
 
@@ -36,11 +43,7 @@ class SplashScreenActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
-        }, 3000)
-    }
-
-    private fun makeTransaction() {
-        viewModel.makeInitialDeposit()
+        }, 50)
     }
 
     private fun toggleTransaction(makeNewTransactionNextStartup: Boolean) {
