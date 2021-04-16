@@ -16,12 +16,25 @@ import java.math.RoundingMode
 
 
 // Adapter for listing the currency objects with Recyclerview
-class CurrencyAdapter() :
+class CurrencyAdapter(private val onItemClicked: (CryptoCurrency) -> Unit) :
     RecyclerView.Adapter<CurrencyAdapter.CurrencyViewHolder>() {
+
 
     private val currencies = mutableListOf<CryptoCurrency>()
 
-    inner class CurrencyViewHolder(val binding: ItemCurrencyBinding, val context: Context) : RecyclerView.ViewHolder(binding.root) {
+    inner class CurrencyViewHolder(
+        private val binding: ItemCurrencyBinding,
+        private val context: Context,
+        private val onItemClicked: (Int) -> Unit
+        )
+        : RecyclerView.ViewHolder(binding.root) {
+
+        init {
+            itemView.setOnClickListener {
+                onItemClicked(absoluteAdapterPosition)
+            }
+        }
+
         // TODO: Encapsulate the function statements with a scope function?
         fun bind(currency: CryptoCurrency) {
 
@@ -29,7 +42,6 @@ class CurrencyAdapter() :
                     .with(context)
                     .load("https://static.coincap.io/assets/icons/${currency.symbol.toLowerCase()}@2x.png")
                     .into(binding.ivLogo)
-
 
             binding.tvName.text = currency.name
             binding.tvSymbol.text = currency.symbol
@@ -67,10 +79,16 @@ class CurrencyAdapter() :
                 }
             }
         }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CurrencyViewHolder {
-        return CurrencyViewHolder(ItemCurrencyBinding.inflate(LayoutInflater.from(parent.context)), parent.context)
+        return CurrencyViewHolder(
+            ItemCurrencyBinding.inflate(LayoutInflater.from(parent.context)),
+            parent.context
+        ) { adapterPosition ->
+            onItemClicked(currencies[adapterPosition])
+        }
     }
 
     override fun onBindViewHolder(holder: CurrencyViewHolder, position: Int) {
