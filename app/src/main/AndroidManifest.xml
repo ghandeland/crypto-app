@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PGR2081_Exam">
-        <activity android:name=".DisplayCurrencyActivity"></activity>
+        <activity android:name=".DisplayCurrencyActivity" android:parentActivityName=".MainActivity"></activity>
         <activity android:name=".SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

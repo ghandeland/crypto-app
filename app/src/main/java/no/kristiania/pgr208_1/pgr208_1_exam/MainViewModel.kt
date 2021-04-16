@@ -24,9 +24,11 @@ class MainViewModel : ViewModel() {
     private lateinit var walletCurrencyDao: WalletCurrencyDao
     private lateinit var transactionDao: BalanceTransactionDao
 
-
     private val _currencies = MutableLiveData<List<CryptoCurrency>>()
     val currencies: LiveData<List<CryptoCurrency>> get() = _currencies
+
+    private val _currency = MutableLiveData<CryptoCurrency>()
+    val currency: LiveData<CryptoCurrency> get() = _currency
 
     // Todo: Error handling
     private val _error = MutableLiveData<Unit>()
@@ -54,6 +56,13 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO + exceptionHandler) {
             val currencyList = coinCapService.getAssets()
             _currencies.postValue(currencyList.data)
+        }
+    }
+
+    fun fetchSingleAssets(currencyCode: String) {
+        viewModelScope.launch(Dispatchers.IO + exceptionHandler) {
+            val currency = coinCapService.getAsset(currencyCode)
+            _currency.postValue(currency)
         }
     }
 

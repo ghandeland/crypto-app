@@ -11,6 +11,7 @@ data class CurrencyList(
 )
 
 // Inner data class to access object properties
+@JsonClass(generateAdapter = true)
 data class CryptoCurrency (
     val id: String,
     val rank: String,
