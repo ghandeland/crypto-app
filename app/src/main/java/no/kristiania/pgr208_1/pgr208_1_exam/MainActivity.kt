@@ -20,11 +20,10 @@ class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
     // Call adapter with onClick lambda function
     private val adapter = CurrencyAdapter { currency ->
-
-//        val intent = Intent(this, DisplayCurrencyActivity::class.java).apply {
-//            putExtra(currency.symbol.toLowerCase(), message)
-//        }
-
+        Intent(this, DisplayCurrencyActivity::class.java).apply {
+            putExtra(EXTRA_MESSAGE, currency.symbol.toLowerCase())
+            startActivity(this)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
