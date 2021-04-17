@@ -10,8 +10,13 @@ data class CurrencyList(
     val data: List<CryptoCurrency>
 )
 
-// Inner data class to access object properties
 @JsonClass(generateAdapter = true)
+data class CurrencyFetch(
+        @field:Json(name = "data")
+        val currency: CryptoCurrency
+)
+
+// Inner data class to access object properties
 data class CryptoCurrency (
     val id: String,
     val rank: String,

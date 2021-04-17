@@ -4,14 +4,12 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import no.kristiania.pgr208_1.pgr208_1_exam.data.api.domain.CryptoCurrency
 import no.kristiania.pgr208_1.pgr208_1_exam.databinding.ActivityMainBinding
 import no.kristiania.pgr208_1.pgr208_1_exam.ui.CurrencyAdapter
 
-const val EXTRA_MESSAGE = "no.kristiania.pgr208_1.pgr208_1_exam.DISPLAY_ACTIVITY"
+const val EXTRA_CURRENCY_ID = "no.kristiania.pgr208_1.pgr208_1_exam.CURRENCY_ID"
+const val EXTRA_CURRENCY_SYMBOL = "no.kristiania.pgr208_1.pgr208_1_exam.CURRENCY_SYMBOL"
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,7 +19,8 @@ class MainActivity : AppCompatActivity() {
     // Call adapter with onClick lambda function
     private val adapter = CurrencyAdapter { currency ->
         Intent(this, DisplayCurrencyActivity::class.java).apply {
-            putExtra(EXTRA_MESSAGE, currency.symbol.toLowerCase())
+            putExtra(EXTRA_CURRENCY_ID, currency.id.toLowerCase())
+            putExtra(EXTRA_CURRENCY_SYMBOL, currency.symbol.toLowerCase())
             startActivity(this)
         }
     }

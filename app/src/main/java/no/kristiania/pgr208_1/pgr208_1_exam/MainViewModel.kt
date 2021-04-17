@@ -59,10 +59,10 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun fetchSingleAssets(currencyCode: String) {
+    fun fetchSingleAsset(currencyId: String) {
         viewModelScope.launch(Dispatchers.IO + exceptionHandler) {
-            val currency = coinCapService.getAsset(currencyCode)
-            _currency.postValue(currency)
+            val currencyFetch = coinCapService.getAsset(currencyId)
+            _currency.postValue(currencyFetch.currency)
         }
     }
 
