@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import com.bumptech.glide.Glide
 import no.kristiania.pgr208_1.pgr208_1_exam.databinding.ActivityDisplayCurrencyBinding
+import no.kristiania.pgr208_1.pgr208_1_exam.ui.BuyFragment
 
 class DisplayCurrencyActivity : AppCompatActivity() {
 
@@ -15,6 +16,7 @@ class DisplayCurrencyActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityDisplayCurrencyBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setOnclickListeners()
         initObservers()
 
         // TODO: Try/Catch and return to parent activity (Note)
@@ -30,6 +32,16 @@ class DisplayCurrencyActivity : AppCompatActivity() {
                 .load("https://static.coincap.io/assets/icons/${currencySymbol}@2x.png")
                 .into(binding.ivLogo)
 
+    }
+
+    private fun setOnclickListeners() {
+        binding.btnBuy.setOnClickListener {
+            supportFragmentManager
+                    .beginTransaction()
+                    .add(R.id.fragmentContainer, BuyFragment.newInstance(), "BuyFragment")
+                    .commit()
+
+        }
     }
 
     private fun initObservers() {

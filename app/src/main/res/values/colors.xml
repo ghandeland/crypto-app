@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="mainblack">#141414</color>
+    <color name="mainblack">#1a1a1a</color>
     <color name="secondaryblack">#080808</color>
     <color name="secondarygray">#c9c9c9</color>
 
-    <color name="orange">#e08f02</color>
+    <color name="orange">#e08702</color>
+    <color name="orangedark">#ba7000</color>
 
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="green">#1ebf06</color>
     <color name="red">#cc0700</color>
-
-
 
 </resources>
