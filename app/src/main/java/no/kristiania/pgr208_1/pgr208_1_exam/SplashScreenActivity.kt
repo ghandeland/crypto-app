@@ -36,7 +36,7 @@ class SplashScreenActivity : AppCompatActivity() {
         // If stored key is not found or true, make the initial deposit to the DB
         if(makeInitialTransaction) {
             viewModel.makeInitialDeposit()
-            toggleTransaction(false)
+            toggleTransaction(false) // Toggle off transaction for next onCreate()
         }
 
         Handler(Looper.getMainLooper()).postDelayed({

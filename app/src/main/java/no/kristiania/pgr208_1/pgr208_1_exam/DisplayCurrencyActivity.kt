@@ -18,11 +18,12 @@ class DisplayCurrencyActivity : AppCompatActivity() {
         setContentView(binding.root)
         setOnclickListeners()
         initObservers()
+        viewModel.init(this)
 
         // TODO: Try/Catch and return to parent activity (Note)
         // Retrieve currency ID from intent and fetch fresh data with it
         val currencyId = intent.getStringExtra(EXTRA_CURRENCY_ID)
-        viewModel.fetchSingleAsset(currencyId!!)
+        viewModel.setCurrentCurrency(currencyId!!)
 
 
         // Retrieve currency symbol from intent and load currency logo with Glide

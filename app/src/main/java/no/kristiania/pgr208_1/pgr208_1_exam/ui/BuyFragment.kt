@@ -1,6 +1,5 @@
 package no.kristiania.pgr208_1.pgr208_1_exam.ui
 
-import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -37,7 +36,7 @@ class BuyFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         viewModel.init(requireContext())
-        viewModel.fetchSingleAsset(currencySymbolId!!)
+        viewModel.setCurrentCurrency(currencySymbolId!!)
         viewModel.fetchUsdBalance()
 
         _binding = FragmentBuyBinding.inflate(inflater, container, false)
@@ -86,7 +85,7 @@ class BuyFragment : Fragment() {
     private fun buy() {
         // Check if input field is empty before parsing
         val usdString = binding.etUSD.text.toString()
-        if (usdString == "") {
+        if (usdString.isEmpty()) {
             binding.tvCurrencyCalculated.text = ""
             showToast("Transaction error: USD input field is empty")
             return
@@ -103,7 +102,7 @@ class BuyFragment : Fragment() {
             return
         }
 
-        viewModel.makeTransactionBuy()
+        viewModel.makeTransactionBuy(usdAmount)
         return
     }
 
