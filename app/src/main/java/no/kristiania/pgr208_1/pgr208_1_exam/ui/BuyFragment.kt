@@ -1,38 +1,35 @@
 package no.kristiania.pgr208_1.pgr208_1_exam.ui
 
 import android.os.Bundle
-import android.util.Log
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import no.kristiania.pgr208_1.pgr208_1_exam.MainViewModel
-import no.kristiania.pgr208_1.pgr208_1_exam.R
 import no.kristiania.pgr208_1.pgr208_1_exam.databinding.FragmentBuyBinding
 import java.lang.Double.parseDouble
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_CURRENT_PRICE = "currencyPrice"
-private const val ARG_CURRENCY_SYMBOL = "currencySymbol"
+private const val ARG_CURRENCY_ID = "currencySymbol"
 
 class BuyFragment : Fragment() {
 
     private val viewModel: MainViewModel by viewModels()
+    private var currencySymbolId: String? = null
 
     private var _binding: FragmentBuyBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
-//        arguments?.let {
-//            currencyPrice = it.getDouble(ARG_CURRENT_PRICE)
-//            currencySymbol = it.getString(ARG_CURRENCY_SYMBOL)
-//        }
-
+        arguments?.let {
+            currencySymbolId = it.getString(ARG_CURRENCY_ID)
+        }
+        viewModel.fetchSingleAsset(currencySymbolId!!)
 
     }
 
@@ -41,10 +38,40 @@ class BuyFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentBuyBinding.inflate(inflater, container, false)
-        //Log.d("displayc", "onCreateView")
-        // https://stackoverflow.com/questions/6188584/viewmodel-and-singleton-pattern#:~:text=No.,the%20run%20of%20the%20application.&text=In%20MVVM%2C%20the%20lifespan%20of,open%20and%20finishes%20their%20changes.
-        //
-        binding.tvCurrencyLabel.text = "Testcoin"
+
+        // Observe fetched currency data
+        viewModel.currentCurrency.observe(viewLifecycleOwner) { currency ->
+            binding.tvCurrencyLabel.text = currency.symbol
+
+            // TODO: Database call to check if currency is owned + Parse and format price correctly
+        }
+
+        // onChangeListener to calculate USD -> crypto
+        binding.etUSD.addTextChangedListener(object: TextWatcher {
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // Check if input field is empty before parsing
+                val usdString = binding.etUSD.text.toString()
+                if(usdString == "") {
+                    binding.tvCurrencyCalculated.text = ""
+                    return
+                }
+
+                // Not empty - Parse to double and check if number is negative or 0
+                val usdAmount = parseDouble(binding.etUSD.text.toString())
+                if(usdAmount <= 0.0) {
+                    binding.tvCurrencyCalculated.text = ""
+                    return
+                }
+
+                // Convert to currency amount with newly fetched currency (fetched in onCreate)
+                val convertedToCurrency = viewModel.convertCurrentUsdToCurrency(usdAmount)
+                binding.tvCurrencyCalculated.text = convertedToCurrency.toString()
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
         return binding.root
 
     }
@@ -56,17 +83,14 @@ class BuyFragment : Fragment() {
     }
 
     companion object {
-
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance() =
-//                BuyFragment().apply {
-//                    arguments = Bundle().apply {
-//                        putDouble(ARG_CURRENT_PRICE, currentPrice)
-//                        putString(ARG_CURRENCY_SYMBOL, symbol)
-//                    }
-//                }
-            BuyFragment()
+        fun newInstance(currencyId: String) =
+                BuyFragment().apply {
+                    arguments = Bundle().apply {
+                        putString(ARG_CURRENCY_ID, currencyId)
+                    }
+                }
+            // BuyFragment()
 
     }
 }

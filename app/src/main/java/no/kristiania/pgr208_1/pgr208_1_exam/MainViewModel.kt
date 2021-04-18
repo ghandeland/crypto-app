@@ -16,6 +16,7 @@ import no.kristiania.pgr208_1.pgr208_1_exam.data.db.AppDatabase
 import no.kristiania.pgr208_1.pgr208_1_exam.data.db.WalletCurrencyDao
 import no.kristiania.pgr208_1.pgr208_1_exam.data.db.BalanceTransactionDao
 import no.kristiania.pgr208_1.pgr208_1_exam.data.db.entity.WalletCurrency
+import java.lang.Double.parseDouble
 
 import java.lang.Exception
 
@@ -27,8 +28,8 @@ class MainViewModel : ViewModel() {
     private val _currencies = MutableLiveData<List<CryptoCurrency>>()
     val currencies: LiveData<List<CryptoCurrency>> get() = _currencies
 
-    private val _currency = MutableLiveData<CryptoCurrency>()
-    val currency: LiveData<CryptoCurrency> get() = _currency
+    private val _currentCurrency = MutableLiveData<CryptoCurrency>()
+    val currentCurrency: LiveData<CryptoCurrency> get() = _currentCurrency
 
     // Todo: Error handling
     private val _error = MutableLiveData<Unit>()
@@ -62,8 +63,13 @@ class MainViewModel : ViewModel() {
     fun fetchSingleAsset(currencyId: String) {
         viewModelScope.launch(Dispatchers.IO + exceptionHandler) {
             val currencyFetch = coinCapService.getAsset(currencyId)
-            _currency.postValue(currencyFetch.currency)
+            _currentCurrency.postValue(currencyFetch.currency)
         }
+    }
+
+    fun convertCurrentUsdToCurrency(usdAmount: Double): Double {
+        val currencyPrice = parseDouble(currentCurrency.value!!.priceUsd)
+        return usdAmount / currencyPrice
     }
 
     fun makeInitialDeposit() {

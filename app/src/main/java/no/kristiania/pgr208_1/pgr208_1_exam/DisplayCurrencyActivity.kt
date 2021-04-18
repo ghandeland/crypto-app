@@ -27,6 +27,7 @@ class DisplayCurrencyActivity : AppCompatActivity() {
 
         // Retrieve currency symbol from intent and load currency logo with Glide
         val currencySymbol = intent.getStringExtra(EXTRA_CURRENCY_SYMBOL)
+
         Glide
                 .with(this)
                 .load("https://static.coincap.io/assets/icons/${currencySymbol}@2x.png")
@@ -38,14 +39,14 @@ class DisplayCurrencyActivity : AppCompatActivity() {
         binding.btnBuy.setOnClickListener {
             supportFragmentManager
                     .beginTransaction()
-                    .add(R.id.fragmentContainer, BuyFragment.newInstance(), "BuyFragment")
+                    .add(R.id.fragmentContainer, BuyFragment.newInstance(viewModel.currentCurrency.value!!.id), "BuyFragment")
                     .commit()
 
         }
     }
 
     private fun initObservers() {
-        viewModel.currency.observe(this) { currency ->
+        viewModel.currentCurrency.observe(this) { currency ->
             binding.tvCurrencyTitle.text = "${currency.name} [${currency.symbol.toUpperCase()}]"
             binding.tvCurrencyPrice.text = "Current price: ${currency.priceUsd} \$"
             // TODO: Database call to check if currency is owned + Parse and format price correctly
