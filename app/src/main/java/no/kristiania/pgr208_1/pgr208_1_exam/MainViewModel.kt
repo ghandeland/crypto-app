@@ -22,8 +22,8 @@ import java.lang.Exception
 
 class MainViewModel : ViewModel() {
     private val coinCapService: CoinCapService = API.coinCapService
-    private lateinit var walletCurrencyDao: WalletCurrencyDao
     private lateinit var transactionDao: BalanceTransactionDao
+    private lateinit var walletCurrencyDao: WalletCurrencyDao
 
     private val _currencies = MutableLiveData<List<CryptoCurrency>>()
     val currencies: LiveData<List<CryptoCurrency>> get() = _currencies
@@ -35,25 +35,19 @@ class MainViewModel : ViewModel() {
     private val _error = MutableLiveData<Unit>()
     val error: LiveData<Unit> get() = _error
 
-    private val _balance = MutableLiveData<Double>()
-    val balance: LiveData<Double> get() = _balance
+    private val _usdBalance = MutableLiveData<Double>()
+    val usdBalance: LiveData<Double> get() = _usdBalance
 
     private val exceptionHandler = CoroutineExceptionHandler { _, _ ->
         _error.postValue(Unit)
     }
 
     fun init(context: Context) {
-
-        walletCurrencyDao = AppDatabase.getDatabase(context).balanceDao() // Retrieve balance from DB
         transactionDao = AppDatabase.getDatabase(context).balanceTransactionDao() // Retrieve transactions from DB
-        fetchAssets() // Fetch currency data from API
+        walletCurrencyDao = AppDatabase.getDatabase(context).walletCurrencyDao() // Retrieve transactions from DB
     }
 
-    fun reload() {
-        //fetchAssets()
-    }
-
-    private fun fetchAssets() {
+    fun fetchAssets() {
         viewModelScope.launch(Dispatchers.IO + exceptionHandler) {
             val currencyList = coinCapService.getAssets()
             _currencies.postValue(currencyList.data)
@@ -78,7 +72,7 @@ class MainViewModel : ViewModel() {
 
                 walletCurrencyDao.insert(WalletCurrency(currencyCode = "usd", amount = 10_000.0))
                 val usdBalance = walletCurrencyDao.getCurrency("usd")
-                _balance.postValue(usdBalance.amount);
+                _usdBalance.postValue(usdBalance.amount);
                 Log.d("db", usdBalance.amount.toString())
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -89,16 +83,21 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun calculateBalanceInUsd() {
+    // TODO: MAKE NEW METHOD: Convert to calculate sum of all currencies to USD
+    fun fetchUsdBalance() {
         viewModelScope.launch {
             try {
                 val usdBalance = walletCurrencyDao.getCurrency("usd")
-                _balance.postValue(usdBalance.amount);
+                _usdBalance.postValue(usdBalance.amount);
             } catch (e: Exception) {
                 Log.d("db", e.toString())
                 e.printStackTrace()
             }
         }
+    }
+
+    fun makeTransactionBuy() {
+
     }
 
 }

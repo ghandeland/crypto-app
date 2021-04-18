@@ -41,7 +41,6 @@ class DisplayCurrencyActivity : AppCompatActivity() {
                     .beginTransaction()
                     .add(R.id.fragmentContainer, BuyFragment.newInstance(viewModel.currentCurrency.value!!.id), "BuyFragment")
                     .commit()
-
         }
     }
 

@@ -1,5 +1,6 @@
 package no.kristiania.pgr208_1.pgr208_1_exam.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -7,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import no.kristiania.pgr208_1.pgr208_1_exam.MainViewModel
 import no.kristiania.pgr208_1.pgr208_1_exam.databinding.FragmentBuyBinding
@@ -29,14 +31,15 @@ class BuyFragment : Fragment() {
         arguments?.let {
             currencySymbolId = it.getString(ARG_CURRENCY_ID)
         }
-        viewModel.fetchSingleAsset(currencySymbolId!!)
 
     }
 
-
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
+        viewModel.init(requireContext())
+        viewModel.fetchSingleAsset(currencySymbolId!!)
+        viewModel.fetchUsdBalance()
+
         _binding = FragmentBuyBinding.inflate(inflater, container, false)
 
         // Observe fetched currency data
@@ -72,8 +75,36 @@ class BuyFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
+        binding.btnBuy.setOnClickListener {
+            buy()
+        }
+
         return binding.root
 
+    }
+
+    private fun buy() {
+        // Check if input field is empty before parsing
+        val usdString = binding.etUSD.text.toString()
+        if (usdString == "") {
+            binding.tvCurrencyCalculated.text = ""
+            showToast("Transaction error: USD input field is empty")
+            return
+        }
+
+        // Not empty - Parse to double and check if number is negative or 0
+        val usdAmount = parseDouble(binding.etUSD.text.toString())
+        if (usdAmount <= 0.0) {
+            binding.tvCurrencyCalculated.text = ""
+            showToast("Transaction error: USD sum cannot be 0 or negative")
+            return
+        } else if(usdAmount > viewModel.usdBalance.value!!) {
+            showToast("Transaction error: Insufficient balance")
+            return
+        }
+
+        viewModel.makeTransactionBuy()
+        return
     }
 
     // Destroy binding, so that  the field only is valid between onCreateView and onDestroyView
@@ -92,5 +123,9 @@ class BuyFragment : Fragment() {
                 }
             // BuyFragment()
 
+    }
+
+    private fun showToast(text: String) {
+        Toast.makeText(activity, text, Toast.LENGTH_SHORT).show()
     }
 }

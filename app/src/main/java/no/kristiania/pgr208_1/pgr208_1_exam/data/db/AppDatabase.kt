@@ -11,8 +11,8 @@ const val DATABASE_NAME = "crypto_app_db"
 
 @Database(entities = [WalletCurrency::class, BalanceTransaction::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun balanceDao() : WalletCurrencyDao
     abstract fun balanceTransactionDao() : BalanceTransactionDao
+    abstract fun walletCurrencyDao() : WalletCurrencyDao
 
     companion object {
         private var db: AppDatabase? = null

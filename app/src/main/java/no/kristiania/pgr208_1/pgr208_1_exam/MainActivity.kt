@@ -31,8 +31,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         viewModel.init(this)
         initObservers()
-
-        viewModel.calculateBalanceInUsd()
+        viewModel.fetchAssets()
+        viewModel.fetchUsdBalance()
 
 
 
@@ -49,14 +49,14 @@ class MainActivity : AppCompatActivity() {
             adapter.setCurrencyList(currencies)
         }
 
-        viewModel.balance.observe(this) { balance ->
+        viewModel.usdBalance.observe(this) { balance ->
             binding.tvBalance.text = "Balance: $balance USD"
         }
     }
 
     override fun onResume() {
         super.onResume()
-        viewModel.reload()
+        viewModel.fetchAssets()
     }
 
 
