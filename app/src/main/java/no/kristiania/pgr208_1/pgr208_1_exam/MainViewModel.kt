@@ -108,7 +108,8 @@ class MainViewModel : ViewModel() {
                         isBuy = true))
 
 
-                insertBalance()
+                insertBalance(currencyId = currency.id, amount = currencyAmount)
+                insertBalance(currencyId = "usd", amount = (-usdAmount))
 
 
             } catch (e: Exception) {
@@ -140,8 +141,6 @@ class MainViewModel : ViewModel() {
                 } else {
                     _currentCurrencyBalance.postValue(balance)
                 }
-
-                //_currentCurrencyBalance.postValue(balance)
             } catch (e: Exception) {
                 Log.d("db", e.toString())
                 e.printStackTrace()
@@ -150,18 +149,18 @@ class MainViewModel : ViewModel() {
     }
 
     // Insert or update into CurrencyBalance table
-    fun insertBalance(amount: Double, currencyId: String) {
+    fun insertBalance(currencyId: String, amount: Double) {
         viewModelScope.launch {
             try {
-                // Fetch and set currency balance to liveData
-                // TODO: Make this universal: Should be able to update/insert balance, negative and positive with every currency
+                val balance = balanceDao.getCurrency(currencyId)
 
-                val currentBalance = currentCurrencyBalance.value!!
-                if(currentBalance.currencyId == NOT_INSERTED) {
-                    balanceDao.insert(CurrencyBalance(currencyId = currentCurrency.value!!.id, amount))
+                // Balance does not exist in DB
+                if(balance == null) {
+                    balanceDao.insert(CurrencyBalance(currencyId, amount))
+                //  Update existing balance
                 } else {
-                    val newBalance = currentCurrencyBalance.value!!.amount + amount
-                    balanceDao.update(CurrencyBalance(currencyId = currentBalance.currencyId, amount = newBalance))
+                    val newBalance = balance.amount + amount
+                    balanceDao.update(CurrencyBalance(currencyId = currencyId, amount = newBalance))
                 }
             } catch (e: Exception) {
                 Log.d("db", e.toString())

@@ -2,6 +2,7 @@ package no.kristiania.pgr208_1.pgr208_1_exam
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import com.bumptech.glide.Glide
 import no.kristiania.pgr208_1.pgr208_1_exam.databinding.ActivityDisplayCurrencyBinding
@@ -51,5 +52,15 @@ class DisplayCurrencyActivity : AppCompatActivity() {
             binding.tvCurrencyPrice.text = "Current price: ${currency.priceUsd} \$"
             // TODO: Database call to check if currency is owned + Parse and format price correctly
         }
+
+        viewModel.currentCurrencyBalance.observe(this) { balance ->
+            if(balance.amount > 0.0) {
+                binding.tvCurrencyOwned.visibility = View.VISIBLE
+                binding.tvCurrencyOwned.text = "You currently own: ${balance.amount}"
+            } else {
+                binding.tvCurrencyOwned.visibility = View.GONE
+            }
+        }
+
     }
 }

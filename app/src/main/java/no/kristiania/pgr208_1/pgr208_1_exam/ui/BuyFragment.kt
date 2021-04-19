@@ -1,17 +1,22 @@
 package no.kristiania.pgr208_1.pgr208_1_exam.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import no.kristiania.pgr208_1.pgr208_1_exam.DisplayCurrencyActivity
+import no.kristiania.pgr208_1.pgr208_1_exam.EXTRA_CURRENCY_ID
+import no.kristiania.pgr208_1.pgr208_1_exam.EXTRA_CURRENCY_SYMBOL
 import no.kristiania.pgr208_1.pgr208_1_exam.MainViewModel
 import no.kristiania.pgr208_1.pgr208_1_exam.databinding.FragmentBuyBinding
 import java.lang.Double.parseDouble
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -49,18 +54,18 @@ class BuyFragment : Fragment() {
         }
 
         // onChangeListener to calculate USD -> crypto
-        binding.etUSD.addTextChangedListener(object: TextWatcher {
+        binding.etUSD.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 // Check if input field is empty before parsing
                 val usdString = binding.etUSD.text.toString()
-                if(usdString == "") {
+                if (usdString == "") {
                     binding.tvCurrencyCalculated.text = ""
                     return
                 }
 
                 // Not empty - Parse to double and check if number is negative or 0
                 val usdAmount = parseDouble(binding.etUSD.text.toString())
-                if(usdAmount <= 0.0) {
+                if (usdAmount <= 0.0) {
                     binding.tvCurrencyCalculated.text = ""
                     return
                 }
@@ -103,7 +108,19 @@ class BuyFragment : Fragment() {
         }
 
         viewModel.makeTransactionBuy(usdAmount)
-        return
+
+        val intent = Intent(activity, DisplayCurrencyActivity::class.java)
+        startActivity(intent)
+
+
+        // Retrieve currency data and send it back to parent activity to restart
+        val currentCurrency = viewModel.currentCurrency.value!!
+        Intent(activity, DisplayCurrencyActivity::class.java).apply {
+            putExtra(EXTRA_CURRENCY_ID, currentCurrency.id.toLowerCase())
+            putExtra(EXTRA_CURRENCY_SYMBOL, currentCurrency.symbol.toLowerCase())
+            startActivity(this)
+        }
+
     }
 
     // Destroy binding, so that  the field only is valid between onCreateView and onDestroyView
