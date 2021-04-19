@@ -26,8 +26,7 @@ class CurrencyAdapter(private val onItemClicked: (CryptoCurrency) -> Unit) :
         private val binding: ItemCurrencyBinding,
         private val context: Context,
         private val onItemClicked: (Int) -> Unit
-        )
-        : RecyclerView.ViewHolder(binding.root) {
+        ): RecyclerView.ViewHolder(binding.root) {
 
         init {
             itemView.setOnClickListener {
@@ -35,47 +34,41 @@ class CurrencyAdapter(private val onItemClicked: (CryptoCurrency) -> Unit) :
             }
         }
 
-        // TODO: Encapsulate the function statements with a scope function?
         fun bind(currency: CryptoCurrency) {
+            binding.apply {
+                Glide
+                        .with(context)
+                        .load("https://static.coincap.io/assets/icons/${currency.symbol.toLowerCase()}@2x.png")
+                        .into(ivLogo)
 
-            Glide
-                    .with(context)
-                    .load("https://static.coincap.io/assets/icons/${currency.symbol.toLowerCase()}@2x.png")
-                    .into(binding.ivLogo)
+                tvName.text = currency.name
+                tvSymbol.text = currency.symbol
 
-            binding.tvName.text = currency.name
-            binding.tvSymbol.text = currency.symbol
-
-            // TODO: Parse price and list amount of decimal numbers accordingly
-            val price = parseDouble(currency.priceUsd)
-            val priceRounded = BigDecimal(price).setScale(2, RoundingMode.HALF_EVEN)
-            binding.tvPrice.text = "$priceRounded$"
+                // TODO: Parse price and list amount of decimal numbers accordingly
+                val price = parseDouble(currency.priceUsd)
+                val priceRounded = BigDecimal(price).setScale(2, RoundingMode.HALF_EVEN)
+                tvPrice.text = "$priceRounded$"
 
 
-            // Parse the large percentage string to a double, then round it down correctly using java.math.BigDecimal
-            val percentage =  parseDouble(currency.changePercent24Hr)
-            val percentageRounded = BigDecimal(percentage).setScale(2, RoundingMode.HALF_EVEN).toDouble()
-            binding.tvPercentage.text = "$percentageRounded%"
-            when {
-                percentageRounded > 0 -> {
-                    binding.apply {
+                // Parse the large percentage string to a double, then round it down correctly using java.math.BigDecimal
+                val percentage =  parseDouble(currency.changePercent24Hr)
+                val percentageRounded = BigDecimal(percentage).setScale(2, RoundingMode.HALF_EVEN).toDouble()
+                tvPercentage.text = "$percentageRounded%"
+                when {
+                    percentageRounded > 0 -> {
                         tvPercentage.setTextColor(Color.parseColor("#1ebf06"))
                         ivArrow.setImageResource(R.drawable.ic_arrow_gr)
                         ivArrow.visibility = View.VISIBLE
                     }
-
-                }
-                percentageRounded < 0 -> {
-                    binding.apply {
+                    percentageRounded < 0 -> {
                         tvPercentage.setTextColor(Color.parseColor("#cc0700"))
                         ivArrow.setImageResource(R.drawable.ic_arrow_re)
                         ivArrow.visibility = View.VISIBLE
                     }
-
-                }
-                else -> {
-                    binding.tvPercentage.setTextColor(Color.parseColor("#000000"))
-                    binding.ivArrow.visibility = View.INVISIBLE
+                    else -> {
+                        tvPercentage.setTextColor(Color.parseColor("#000000"))
+                        ivArrow.visibility = View.INVISIBLE
+                    }
                 }
             }
         }

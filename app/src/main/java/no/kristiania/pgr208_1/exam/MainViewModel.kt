@@ -63,9 +63,9 @@ class MainViewModel : ViewModel() {
 
     fun setCurrentCurrency(currencyId: String) {
         viewModelScope.launch(Dispatchers.IO + exceptionHandler) {
-            val currencyFetch = coinCapService.getAsset(currencyId)
-            _currentCurrency.postValue(currencyFetch.currency)
-            setCurrentCurrencyBalance(currencyFetch.currency.id)
+            val currency = coinCapService.getAsset(currencyId).currency
+            _currentCurrency.postValue(currency)
+            setCurrentCurrencyBalance(currency.id, currency.symbol)
         }
     }
 
@@ -83,7 +83,7 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch {
             try {
 
-                balanceDao.insert(CurrencyBalance(currencyId = "usd", amount = 10_000.0))
+                balanceDao.insert(CurrencyBalance(currencyId = "usd", amount = 10_000.0, symbol = "usd"))
                 val usdBalance = balanceDao.getCurrency("usd")
                 _usdBalance.postValue(usdBalance.amount);
                 Log.d("db", usdBalance.amount.toString())
@@ -115,8 +115,8 @@ class MainViewModel : ViewModel() {
                 )
 
 
-                insertBalance(currencyId = currency.id, amount = currencyAmount)
-                insertBalance(currencyId = "usd", amount = (-usdAmount))
+                insertBalance(currencyId = currency.id, amount = currencyAmount, currencySymbol = currency.symbol)
+                insertBalance(currencyId = "usd", amount = (-usdAmount), currencySymbol = "usd")
 
 
             } catch (e: Exception) {
@@ -144,8 +144,8 @@ class MainViewModel : ViewModel() {
                 )
 
 
-                insertBalance(currencyId = currency.id, amount = -currencyAmount)
-                insertBalance(currencyId = "usd", amount = (usdAmount))
+                insertBalance(currencyId = currency.id, amount = -currencyAmount, currencySymbol = currency.symbol)
+                insertBalance(currencyId = "usd", amount = (usdAmount), currencySymbol = "usd")
 
 
             } catch (e: Exception) {
@@ -168,13 +168,13 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun setCurrentCurrencyBalance(currencyId: String) {
+    fun setCurrentCurrencyBalance(currencyId: String, currencySymbol: String) {
         viewModelScope.launch {
             try {
                 val balance = balanceDao.getCurrency(currencyId)
 
                 if(balance == null) {
-                    _currentCurrencyBalance.postValue(CurrencyBalance(currencyId = NOT_INSERTED, amount = 0.0))
+                    _currentCurrencyBalance.postValue(CurrencyBalance(currencyId = NOT_INSERTED, amount = 0.0, symbol =  currencySymbol))
                 } else {
                     _currentCurrencyBalance.postValue(balance)
                 }
@@ -186,18 +186,18 @@ class MainViewModel : ViewModel() {
     }
 
     // Insert or update into CurrencyBalance table
-    fun insertBalance(currencyId: String, amount: Double) {
+    fun insertBalance(currencyId: String, amount: Double, currencySymbol: String) {
         viewModelScope.launch {
             try {
                 val balance = balanceDao.getCurrency(currencyId)
 
                 // Balance does not exist in DB
                 if(balance == null) {
-                    balanceDao.insert(CurrencyBalance(currencyId, amount))
+                    balanceDao.insert(CurrencyBalance(currencyId, amount, currencySymbol))
                 //  Update existing balance
                 } else {
                     val newBalance = balance.amount + amount
-                    balanceDao.update(CurrencyBalance(currencyId = currencyId, amount = newBalance))
+                    balanceDao.update(CurrencyBalance(currencyId = currencyId, amount = newBalance, symbol = currencySymbol))
                 }
             } catch (e: Exception) {
                 Log.d("db", e.toString())

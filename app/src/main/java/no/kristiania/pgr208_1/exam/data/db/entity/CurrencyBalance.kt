@@ -8,5 +8,6 @@ import androidx.room.PrimaryKey
 data class CurrencyBalance (
         @PrimaryKey
         val currencyId: String,
-        val amount: Double
+        val amount: Double,
+        val symbol: String
 )
