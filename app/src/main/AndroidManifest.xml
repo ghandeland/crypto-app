@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="no.kristiania.pgr208_1.pgr208_1_exam">
+    package="no.kristiania.pgr208_1.exam">
     <!-- Internet permissions for making API calls -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <!-- allowBackup="false" so that uninstalling the app removes all DB data (fix for Room data integrity issue) -->
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
@@ -13,15 +12,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PGR2081_Exam">
-        <activity android:name=".DisplayCurrencyActivity" android:parentActivityName=".MainActivity"></activity>
-        <activity android:name=".SplashScreenActivity">
+        <activity
+            android:name="no.kristiania.pgr208_1.exam.PortfolioActivity"
+            android:label="@string/title_activity_portfolio"
+            android:theme="@style/Theme.PGR2081_Exam.NoActionBar"></activity>
+        <activity
+            android:name="no.kristiania.pgr208_1.exam.DisplayCurrencyActivity"
+            android:parentActivityName="no.kristiania.pgr208_1.exam.MainActivity" />
+        <activity android:name="no.kristiania.pgr208_1.exam.SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity">
+        <activity android:name="no.kristiania.pgr208_1.exam.MainActivity">
             <intent-filter>
 
                 <!-- <category android:name="android.intent.category.DEFAULT" /> -->

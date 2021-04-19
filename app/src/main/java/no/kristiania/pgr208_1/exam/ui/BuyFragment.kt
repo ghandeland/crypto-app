@@ -1,30 +1,33 @@
-package no.kristiania.pgr208_1.pgr208_1_exam.ui
+package no.kristiania.pgr208_1.exam.ui
 
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import no.kristiania.pgr208_1.pgr208_1_exam.*
-import no.kristiania.pgr208_1.pgr208_1_exam.databinding.FragmentSellBinding
-import java.lang.Double
+import no.kristiania.pgr208_1.exam.DisplayCurrencyActivity
+import no.kristiania.pgr208_1.exam.EXTRA_CURRENCY_ID
+import no.kristiania.pgr208_1.exam.EXTRA_CURRENCY_SYMBOL
+import no.kristiania.pgr208_1.exam.MainViewModel
+import no.kristiania.pgr208_1.exam.databinding.FragmentBuyBinding
+import java.lang.Double.parseDouble
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-
 private const val ARG_CURRENCY_ID = "currencySymbol"
 
-class SellFragment : Fragment() {
+class BuyFragment : Fragment() {
+
     private val viewModel: MainViewModel by viewModels()
     private var currencyId: String? = null
 
-    private var _binding: FragmentSellBinding? = null
+    private var _binding: FragmentBuyBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,9 +42,9 @@ class SellFragment : Fragment() {
     ): View? {
         viewModel.init(requireContext())
         viewModel.setCurrentCurrency(currencyId!!)
-        viewModel.fetchUsdBalance() // Not necessary?
+        viewModel.fetchUsdBalance()
 
-        _binding = FragmentSellBinding.inflate(inflater, container, false)
+        _binding = FragmentBuyBinding.inflate(inflater, container, false)
 
         // Observe fetched currency data
         viewModel.currentCurrency.observe(viewLifecycleOwner) { currency ->
@@ -50,81 +53,61 @@ class SellFragment : Fragment() {
             // TODO: Database call to check if currency is owned + Parse and format price correctly
         }
 
-        // onChangeListener to calculate crypto -> USD
-        binding.etCurrency.addTextChangedListener(object : TextWatcher {
+        // onChangeListener to calculate USD -> crypto
+        binding.etUSD.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 // Check if input field is empty before parsing
-                val currencyString = binding.etCurrency.text.toString()
-                if (currencyString == "") {
-                    binding.tvUsdCalculated.text = ""
+                val usdString = binding.etUSD.text.toString()
+                if (usdString == "") {
+                    binding.tvCurrencyCalculated.text = ""
                     return
                 }
 
                 // Not empty - Parse to double and check if number is negative or 0
-                val currencyAmount = Double.parseDouble(binding.etCurrency.text.toString())
-                if (currencyAmount <= 0.0) {
-                    binding.tvUsdCalculated.text = ""
+                val usdAmount = parseDouble(binding.etUSD.text.toString())
+                if (usdAmount <= 0.0) {
+                    binding.tvCurrencyCalculated.text = ""
                     return
                 }
 
                 // Convert to currency amount with newly fetched currency (fetched in onCreate)
-                val convertedToCurrency = viewModel.convertCurrentCurrencyToUsd(currencyAmount)
-                binding.tvUsdCalculated.text = convertedToCurrency.toString()
+                val convertedToCurrency = viewModel.convertCurrentUsdToCurrency(usdAmount)
+                binding.tvCurrencyCalculated.text = convertedToCurrency.toString()
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {}
         })
 
-        binding.btnSell.setOnClickListener {
-            sell()
-        }
-
-        binding.btnSellAll.setOnClickListener {
-            sellAll()
+        binding.btnBuy.setOnClickListener {
+            buy()
         }
 
         return binding.root
 
     }
 
-    private fun sellAll() {
-        if(viewModel.currentCurrencyBalance.value!!.amount == 0.0) {
-            showToast("Transaction error: You do not own any of this currency")
-            return
-        }
-
-        viewModel.sellAllOfCurrentCurrency()
-
-        val currentCurrency = viewModel.currentCurrency.value!!
-        Intent(activity, DisplayCurrencyActivity::class.java).apply {
-            putExtra(EXTRA_CURRENCY_ID, currentCurrency.id.toLowerCase())
-            putExtra(EXTRA_CURRENCY_SYMBOL, currentCurrency.symbol.toLowerCase())
-            startActivity(this)
-        }
-    }
-
-    private fun sell() {
+    private fun buy() {
         // Check if input field is empty before parsing
-        val usdString = binding.etCurrency.text.toString()
+        val usdString = binding.etUSD.text.toString()
         if (usdString.isEmpty()) {
-            binding.tvUsdCalculated.text = ""
-            showToast("Transaction error: Currency input field is empty")
+            binding.tvCurrencyCalculated.text = ""
+            showToast("Transaction error: USD input field is empty")
             return
         }
 
         // Not empty - Parse to double and check if number is negative or 0
-        val currencyAmount = Double.parseDouble(binding.etCurrency.text.toString())
-        if (currencyAmount <= 0.0) {
-            binding.tvUsdCalculated.text = ""
-            showToast("Transaction error: Currency sum cannot be 0 or negative")
+        val usdAmount = parseDouble(binding.etUSD.text.toString())
+        if (usdAmount <= 0.0) {
+            binding.tvCurrencyCalculated.text = ""
+            showToast("Transaction error: USD sum cannot be 0 or negative")
             return
-        } else if(currencyAmount > viewModel.currentCurrencyBalance.value!!.amount) {
-            showToast("Transaction error: Given currency sum is bigger than your balance")
+        } else if(usdAmount > viewModel.usdBalance.value!!) {
+            showToast("Transaction error: Insufficient balance")
             return
         }
 
-        viewModel.makeTransactionSell(currencyAmount)
+        viewModel.makeTransactionBuy(usdAmount)
 
         // Retrieve currency data and send it back to parent activity to restart
         val currentCurrency = viewModel.currentCurrency.value!!
@@ -133,6 +116,7 @@ class SellFragment : Fragment() {
             putExtra(EXTRA_CURRENCY_SYMBOL, currentCurrency.symbol.toLowerCase())
             startActivity(this)
         }
+
     }
 
     // Destroy binding, so that  the field only is valid between onCreateView and onDestroyView
@@ -144,12 +128,12 @@ class SellFragment : Fragment() {
     companion object {
         @JvmStatic
         fun newInstance(currencyId: String) =
-                SellFragment().apply {
+                BuyFragment().apply {
                     arguments = Bundle().apply {
                         putString(ARG_CURRENCY_ID, currencyId)
                     }
                 }
-        // BuyFragment()
+            // BuyFragment()
 
     }
 

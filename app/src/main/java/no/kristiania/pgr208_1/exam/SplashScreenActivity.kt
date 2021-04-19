@@ -1,4 +1,4 @@
-package no.kristiania.pgr208_1.pgr208_1_exam
+package no.kristiania.pgr208_1.exam
 
 import android.content.Context
 import android.content.Intent
@@ -9,7 +9,7 @@ import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import androidx.activity.viewModels
-import no.kristiania.pgr208_1.pgr208_1_exam.databinding.ActivitySplashScreenBinding
+import no.kristiania.pgr208_1.exam.databinding.ActivitySplashScreenBinding
 
 private const val TRANSACTION_FLAG_KEY = "no.kristiania.pgr208_1.exam.NEW_TRANSACTION_KEY"
 

@@ -1,4 +1,4 @@
-package no.kristiania.pgr208_1.pgr208_1_exam
+package no.kristiania.pgr208_1.exam
 
 import android.content.Context
 import android.util.Log
@@ -9,14 +9,14 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import no.kristiania.pgr208_1.pgr208_1_exam.data.api.API
-import no.kristiania.pgr208_1.pgr208_1_exam.data.api.CoinCapService
-import no.kristiania.pgr208_1.pgr208_1_exam.data.api.domain.CryptoCurrency
-import no.kristiania.pgr208_1.pgr208_1_exam.data.db.AppDatabase
-import no.kristiania.pgr208_1.pgr208_1_exam.data.db.CurrencyBalanceDao
-import no.kristiania.pgr208_1.pgr208_1_exam.data.db.CurrencyTransactionDao
-import no.kristiania.pgr208_1.pgr208_1_exam.data.db.entity.CurrencyTransaction
-import no.kristiania.pgr208_1.pgr208_1_exam.data.db.entity.CurrencyBalance
+import no.kristiania.pgr208_1.exam.data.api.API
+import no.kristiania.pgr208_1.exam.data.api.CoinCapService
+import no.kristiania.pgr208_1.exam.data.api.domain.CryptoCurrency
+import no.kristiania.pgr208_1.exam.data.db.AppDatabase
+import no.kristiania.pgr208_1.exam.data.db.CurrencyBalanceDao
+import no.kristiania.pgr208_1.exam.data.db.CurrencyTransactionDao
+import no.kristiania.pgr208_1.exam.data.db.entity.CurrencyTransaction
+import no.kristiania.pgr208_1.exam.data.db.entity.CurrencyBalance
 import java.lang.Double.parseDouble
 
 import java.lang.Exception
@@ -105,12 +105,14 @@ class MainViewModel : ViewModel() {
 
 
                 // Insert into transaction table
-                transactionDao.insert(CurrencyTransaction(
+                transactionDao.insert(
+                    CurrencyTransaction(
                         currencyId = currency.id,
                         currencyAmount = currencyAmount,
                         currencyPrice = currencyPrice,
                         usdAmount = usdAmount,
-                        isBuy = true))
+                        isBuy = true)
+                )
 
 
                 insertBalance(currencyId = currency.id, amount = currencyAmount)
@@ -132,12 +134,14 @@ class MainViewModel : ViewModel() {
 
 
                 // Insert into transaction table
-                transactionDao.insert(CurrencyTransaction(
+                transactionDao.insert(
+                    CurrencyTransaction(
                     currencyId = currency.id,
                     currencyAmount = currencyAmount,
                     currencyPrice = currencyPrice,
                     usdAmount = usdAmount,
-                    isBuy = false))
+                    isBuy = false)
+                )
 
 
                 insertBalance(currencyId = currency.id, amount = -currencyAmount)

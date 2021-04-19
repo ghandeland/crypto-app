@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/mainblack"
-    tools:context=".MainActivity">
+    tools:context="no.kristiania.pgr208_1.exam.MainActivity">
 
 
 
@@ -21,29 +21,24 @@
 -->
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/flBalanceDisplay"
+    <LinearLayout
+        android:id="@+id/llBalanceDisplay"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/orangedark"
+        android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-
-        android:textAlignment="center">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/tvBalance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Balance: 13,549.27"
-            android:textSize="20dp"
+            android:text="Points: - $"
             android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:textSize="20dp" />
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_currencies"
@@ -52,7 +47,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/flBalanceDisplay"></androidx.recyclerview.widget.RecyclerView>
+        app:layout_constraintTop_toBottomOf="@id/llBalanceDisplay"></androidx.recyclerview.widget.RecyclerView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

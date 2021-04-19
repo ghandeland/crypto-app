@@ -1,11 +1,11 @@
-package no.kristiania.pgr208_1.pgr208_1_exam.data.db
+package no.kristiania.pgr208_1.exam.data.db
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import no.kristiania.pgr208_1.pgr208_1_exam.data.db.entity.CurrencyTransaction
-import no.kristiania.pgr208_1.pgr208_1_exam.data.db.entity.CurrencyBalance
+import no.kristiania.pgr208_1.exam.data.db.entity.CurrencyTransaction
+import no.kristiania.pgr208_1.exam.data.db.entity.CurrencyBalance
 
 const val DATABASE_NAME = "crypto_app_db"
 

@@ -1,4 +1,4 @@
-package no.kristiania.pgr208_1.pgr208_1_exam.data.db.entity
+package no.kristiania.pgr208_1.exam.data.db.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

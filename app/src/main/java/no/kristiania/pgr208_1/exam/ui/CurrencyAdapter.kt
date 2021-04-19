@@ -1,4 +1,4 @@
-package no.kristiania.pgr208_1.pgr208_1_exam.ui
+package no.kristiania.pgr208_1.exam.ui
 
 import android.content.Context
 import android.graphics.Color
@@ -7,9 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import no.kristiania.pgr208_1.pgr208_1_exam.R
-import no.kristiania.pgr208_1.pgr208_1_exam.data.api.domain.CryptoCurrency
-import no.kristiania.pgr208_1.pgr208_1_exam.databinding.ItemCurrencyBinding
+import no.kristiania.pgr208_1.exam.R
+import no.kristiania.pgr208_1.exam.data.api.domain.CryptoCurrency
+import no.kristiania.pgr208_1.exam.databinding.ItemCurrencyBinding
 import java.lang.Double.parseDouble
 import java.math.BigDecimal
 import java.math.RoundingMode

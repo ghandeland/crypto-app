@@ -1,4 +1,4 @@
-package no.kristiania.pgr208_1.pgr208_1_exam
+package no.kristiania.pgr208_1.exam
 
 import org.junit.Test
 

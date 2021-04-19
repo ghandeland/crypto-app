@@ -1,4 +1,4 @@
-package no.kristiania.pgr208_1.pgr208_1_exam
+package no.kristiania.pgr208_1.exam
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

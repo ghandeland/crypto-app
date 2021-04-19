@@ -1,7 +1,7 @@
-package no.kristiania.pgr208_1.pgr208_1_exam.data.db
+package no.kristiania.pgr208_1.exam.data.db
 
 import androidx.room.*
-import no.kristiania.pgr208_1.pgr208_1_exam.data.db.entity.CurrencyBalance
+import no.kristiania.pgr208_1.exam.data.db.entity.CurrencyBalance
 
 @Dao
 interface CurrencyBalanceDao {
@@ -9,7 +9,7 @@ interface CurrencyBalanceDao {
     suspend fun insert(balance: CurrencyBalance)
 
     @Query("SELECT * FROM currency_balance_table")
-    suspend fun getWallet(): List<CurrencyBalance>
+    suspend fun getPortfolio(): List<CurrencyBalance>
 
     @Query("SELECT * FROM currency_balance_table WHERE currencyId = :currencyId")
     suspend fun getCurrency(currencyId: String): CurrencyBalance

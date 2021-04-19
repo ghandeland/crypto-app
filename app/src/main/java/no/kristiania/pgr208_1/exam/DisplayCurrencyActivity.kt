@@ -1,13 +1,13 @@
-package no.kristiania.pgr208_1.pgr208_1_exam
+package no.kristiania.pgr208_1.exam
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import com.bumptech.glide.Glide
-import no.kristiania.pgr208_1.pgr208_1_exam.databinding.ActivityDisplayCurrencyBinding
-import no.kristiania.pgr208_1.pgr208_1_exam.ui.BuyFragment
-import no.kristiania.pgr208_1.pgr208_1_exam.ui.SellFragment
+import no.kristiania.pgr208_1.exam.databinding.ActivityDisplayCurrencyBinding
+import no.kristiania.pgr208_1.exam.ui.BuyFragment
+import no.kristiania.pgr208_1.exam.ui.SellFragment
 
 class DisplayCurrencyActivity : AppCompatActivity() {
 

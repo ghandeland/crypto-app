@@ -1,4 +1,4 @@
-package no.kristiania.pgr208_1.pgr208_1_exam.data.api
+package no.kristiania.pgr208_1.exam.data.api
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory

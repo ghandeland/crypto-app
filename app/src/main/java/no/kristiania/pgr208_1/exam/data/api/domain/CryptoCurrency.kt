@@ -1,4 +1,4 @@
-package no.kristiania.pgr208_1.pgr208_1_exam.data.api.domain
+package no.kristiania.pgr208_1.exam.data.api.domain
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
