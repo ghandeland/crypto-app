@@ -74,6 +74,11 @@ class MainViewModel : ViewModel() {
         return usdAmount / currencyPrice
     }
 
+    fun convertCurrentCurrencyToUsd(currencyAmount: Double): Double {
+        val currencyPrice = parseDouble(currentCurrency.value!!.priceUsd)
+        return currencyAmount * currencyPrice
+    }
+
     fun makeInitialDeposit() {
         viewModelScope.launch {
             try {
@@ -117,6 +122,34 @@ class MainViewModel : ViewModel() {
             }
         }
     }
+
+    fun makeTransactionSell(currencyAmount: Double) {
+        viewModelScope.launch {
+            try {
+                val currency = currentCurrency.value!!
+                val currencyPrice = parseDouble(currency.priceUsd)
+                val usdAmount = currencyAmount * currencyPrice
+
+
+                // Insert into transaction table
+                transactionDao.insert(CurrencyTransaction(
+                    currencyId = currency.id,
+                    currencyAmount = currencyAmount,
+                    currencyPrice = currencyPrice,
+                    usdAmount = usdAmount,
+                    isBuy = false))
+
+
+                insertBalance(currencyId = currency.id, amount = -currencyAmount)
+                insertBalance(currencyId = "usd", amount = (usdAmount))
+
+
+            } catch (e: Exception) {
+                Log.d("db", e.toString())
+            }
+        }
+    }
+
 
     // TODO: MAKE NEW METHOD: Convert to calculate sum of all currencies to USD
     fun fetchUsdBalance() {
@@ -162,6 +195,19 @@ class MainViewModel : ViewModel() {
                     val newBalance = balance.amount + amount
                     balanceDao.update(CurrencyBalance(currencyId = currencyId, amount = newBalance))
                 }
+            } catch (e: Exception) {
+                Log.d("db", e.toString())
+            }
+        }
+    }
+
+    fun sellAllOfCurrentCurrency() {
+        viewModelScope.launch {
+            try {
+                val balance = currentCurrencyBalance.value!!
+                makeTransactionSell(balance.amount)
+                balanceDao.delete(balance)
+
             } catch (e: Exception) {
                 Log.d("db", e.toString())
             }

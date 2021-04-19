@@ -25,7 +25,7 @@ private const val ARG_CURRENCY_ID = "currencySymbol"
 class BuyFragment : Fragment() {
 
     private val viewModel: MainViewModel by viewModels()
-    private var currencySymbolId: String? = null
+    private var currencyId: String? = null
 
     private var _binding: FragmentBuyBinding? = null
     private val binding get() = _binding!!
@@ -33,7 +33,7 @@ class BuyFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            currencySymbolId = it.getString(ARG_CURRENCY_ID)
+            currencyId = it.getString(ARG_CURRENCY_ID)
         }
 
     }
@@ -41,7 +41,7 @@ class BuyFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         viewModel.init(requireContext())
-        viewModel.setCurrentCurrency(currencySymbolId!!)
+        viewModel.setCurrentCurrency(currencyId!!)
         viewModel.fetchUsdBalance()
 
         _binding = FragmentBuyBinding.inflate(inflater, container, false)
@@ -108,10 +108,6 @@ class BuyFragment : Fragment() {
         }
 
         viewModel.makeTransactionBuy(usdAmount)
-
-        val intent = Intent(activity, DisplayCurrencyActivity::class.java)
-        startActivity(intent)
-
 
         // Retrieve currency data and send it back to parent activity to restart
         val currentCurrency = viewModel.currentCurrency.value!!

@@ -1,9 +1,6 @@
 package no.kristiania.pgr208_1.pgr208_1_exam.data.db
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import no.kristiania.pgr208_1.pgr208_1_exam.data.db.entity.CurrencyBalance
 
 @Dao
@@ -19,5 +16,8 @@ interface CurrencyBalanceDao {
 
     @Update
     suspend fun update(newBalance: CurrencyBalance)
+
+    @Delete
+    suspend fun delete(currencyBalance: CurrencyBalance)
 
 }

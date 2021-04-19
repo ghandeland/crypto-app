@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import com.bumptech.glide.Glide
 import no.kristiania.pgr208_1.pgr208_1_exam.databinding.ActivityDisplayCurrencyBinding
 import no.kristiania.pgr208_1.pgr208_1_exam.ui.BuyFragment
+import no.kristiania.pgr208_1.pgr208_1_exam.ui.SellFragment
 
 class DisplayCurrencyActivity : AppCompatActivity() {
 
@@ -44,6 +45,14 @@ class DisplayCurrencyActivity : AppCompatActivity() {
                     .add(R.id.fragmentContainer, BuyFragment.newInstance(viewModel.currentCurrency.value!!.id), "BuyFragment")
                     .commit()
         }
+
+        binding.btnSell.setOnClickListener {
+            supportFragmentManager
+                .beginTransaction()
+                .add(R.id.fragmentContainer, SellFragment.newInstance(viewModel.currentCurrency.value!!.id), "SellFragment")
+                .commit()
+        }
+
     }
 
     private fun initObservers() {
