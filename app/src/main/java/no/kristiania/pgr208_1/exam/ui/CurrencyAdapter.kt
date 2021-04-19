@@ -36,6 +36,7 @@ class CurrencyAdapter(private val onItemClicked: (CryptoCurrency) -> Unit) :
 
         fun bind(currency: CryptoCurrency) {
             binding.apply {
+                // Load image thumbnail with glide
                 Glide
                         .with(context)
                         .load("https://static.coincap.io/assets/icons/${currency.symbol.toLowerCase()}@2x.png")

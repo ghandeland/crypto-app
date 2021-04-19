@@ -36,8 +36,6 @@ class MainActivity : AppCompatActivity() {
         viewModel.fetchUsdBalance()
 
 
-
-
         // Using the Recyclerview with LinearLayoutManager produced a bug where the individual item width did not fill the parent, therefore it is replaced here with GridLayoutManager
         // https://stackoverflow.com/questions/35904409/item-in-recyclerview-not-filling-its-width-match-parent
         // binding.rvCurrencies.layoutManager = LinearLayoutManager(this)
@@ -47,7 +45,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setOnclickListeners() {
         binding.llBalanceDisplay.setOnClickListener {
-            Intent(this, DisplayCurrencyActivity::class.java).apply { startActivity(this) }
+            Intent(this, PortfolioActivity::class.java).apply { startActivity(this) }
         }
     }
 

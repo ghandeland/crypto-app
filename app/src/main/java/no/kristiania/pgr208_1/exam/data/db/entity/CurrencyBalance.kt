@@ -5,9 +5,10 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "currency_balance_table")
-data class CurrencyBalance (
+data class CurrencyBalance
+
+        (
         @PrimaryKey
         val currencyId: String,
-        val amount: Double,
-        val symbol: String
+        val amount: Double
 )

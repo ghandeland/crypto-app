@@ -4,19 +4,32 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import no.kristiania.pgr208_1.exam.data.api.domain.CryptoCurrency
 import no.kristiania.pgr208_1.exam.data.db.entity.CurrencyBalance
 import no.kristiania.pgr208_1.exam.databinding.ItemPortfolioBinding
 
 class PortfolioAdapter() : RecyclerView.Adapter<PortfolioAdapter.PortfolioViewHolder>(){
 
     private val portfolioBalances = mutableListOf<CurrencyBalance>()
+    private val portfolioCurrencies = mutableListOf<CryptoCurrency>()
+
 
     inner class PortfolioViewHolder (
         private val binding: ItemPortfolioBinding,
         private val context: Context):
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(currencyBalance: CurrencyBalance) {
+        fun bind(balance: CurrencyBalance, currency: CryptoCurrency) {
+            binding.apply {
+                // Load image thumbnail with glide
+
+                tvName.text = "id from balance ${balance.currencyId} "
+                tvAmountAndPrice.text = "name from currency ${currency.name}"
+//                Glide
+//                    .with(context)
+//                    .load("https://static.coincap.io/assets/icons/${""}@2x.png")
+//                    .into(ivLogo)
+            }
 
         }
 
@@ -31,7 +44,7 @@ class PortfolioAdapter() : RecyclerView.Adapter<PortfolioAdapter.PortfolioViewHo
     }
 
     override fun onBindViewHolder(holder: PortfolioViewHolder, position: Int) {
-        holder.bind(portfolioBalances[position])
+        holder.bind(portfolioBalances[position], portfolioCurrencies[position])
     }
 
     override fun getItemCount(): Int {
@@ -42,5 +55,10 @@ class PortfolioAdapter() : RecyclerView.Adapter<PortfolioAdapter.PortfolioViewHo
         portfolioBalances.clear()
         portfolioBalances.addAll(list)
         notifyDataSetChanged()
+    }
+
+    fun setPortfolioCurrencies(list: List<CryptoCurrency>) {
+        portfolioCurrencies.clear()
+        portfolioCurrencies.addAll(list)
     }
 }

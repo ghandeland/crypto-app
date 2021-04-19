@@ -37,6 +37,9 @@ class MainViewModel : ViewModel() {
     private val _currentCurrencyBalance = MutableLiveData<CurrencyBalance>()
     val currentCurrencyBalance: LiveData<CurrencyBalance> get() = _currentCurrencyBalance
 
+    private val _portfolioList = MutableLiveData<List<CurrencyBalance>>()
+    val portfolioList: LiveData<List<CurrencyBalance>> get() = _portfolioList
+
     private val _usdBalance = MutableLiveData<Double>()
     val usdBalance: LiveData<Double> get() = _usdBalance
 
@@ -65,7 +68,42 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO + exceptionHandler) {
             val currency = coinCapService.getAsset(currencyId).currency
             _currentCurrency.postValue(currency)
-            setCurrentCurrencyBalance(currency.id, currency.symbol)
+            setCurrentCurrencyBalance(currency.id)
+        }
+    }
+
+    fun fetchPortfolio() {
+        viewModelScope.launch(Dispatchers.IO + exceptionHandler) {
+            val portfolio = balanceDao.getPortfolio()
+            _portfolioList.postValue(portfolio)
+
+            // Insert currencies that are in portfolio into livedata
+            val portfolioIds = portfolio.map { it.currencyId }
+            val currenciesInPortfolio = currencies.value!!.filter { portfolioIds.contains(it.id) }
+            _currencies.postValue(currenciesInPortfolio)
+        }
+    }
+
+    // Get a list of CryptoCurrency-objects from all portfolio currencies (To list data in portfolio-activity)
+//    fun setCurrenciesToPortfolioOnly() {
+//        viewModelScope.launch(Dispatchers.IO + exceptionHandler) {
+//            val portfolioIds = portfolioList.value!!.map { it.currencyId }
+//            val allCurrencies = currencies.value!!
+//            val portfolioCurrencies = allCurrencies.filter { portfolioIds.contains(it.id) }
+//            _currencies.postValue(portfolioCurrencies)
+//
+//        }
+//
+//
+//    }
+
+    fun logPortfolioAndCurrencyList() {
+        val p = portfolioList.value!!
+        val c = currencies.value!!
+
+        Log.d("portfolio", "${p.size} --- ${c.size}")
+        for (i in p.indices) {
+            Log.d("portfolio", "${p[i]} --- ${c[i]}")
         }
     }
 
@@ -83,7 +121,7 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch {
             try {
 
-                balanceDao.insert(CurrencyBalance(currencyId = "usd", amount = 10_000.0, symbol = "usd"))
+                balanceDao.insert(CurrencyBalance(currencyId = "usd", amount = 10_000.0))
                 val usdBalance = balanceDao.getCurrency("usd")
                 _usdBalance.postValue(usdBalance.amount);
                 Log.d("db", usdBalance.amount.toString())
@@ -115,8 +153,8 @@ class MainViewModel : ViewModel() {
                 )
 
 
-                insertBalance(currencyId = currency.id, amount = currencyAmount, currencySymbol = currency.symbol)
-                insertBalance(currencyId = "usd", amount = (-usdAmount), currencySymbol = "usd")
+                insertBalance(currencyId = currency.id, amount = currencyAmount)
+                insertBalance(currencyId = "usd", amount = (-usdAmount))
 
 
             } catch (e: Exception) {
@@ -144,8 +182,8 @@ class MainViewModel : ViewModel() {
                 )
 
 
-                insertBalance(currencyId = currency.id, amount = -currencyAmount, currencySymbol = currency.symbol)
-                insertBalance(currencyId = "usd", amount = (usdAmount), currencySymbol = "usd")
+                insertBalance(currencyId = currency.id, amount = -currencyAmount)
+                insertBalance(currencyId = "usd", amount = (usdAmount))
 
 
             } catch (e: Exception) {
@@ -168,13 +206,13 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun setCurrentCurrencyBalance(currencyId: String, currencySymbol: String) {
+    fun setCurrentCurrencyBalance(currencyId: String) {
         viewModelScope.launch {
             try {
                 val balance = balanceDao.getCurrency(currencyId)
 
                 if(balance == null) {
-                    _currentCurrencyBalance.postValue(CurrencyBalance(currencyId = NOT_INSERTED, amount = 0.0, symbol =  currencySymbol))
+                    _currentCurrencyBalance.postValue(CurrencyBalance(currencyId = NOT_INSERTED, amount = 0.0))
                 } else {
                     _currentCurrencyBalance.postValue(balance)
                 }
@@ -186,18 +224,18 @@ class MainViewModel : ViewModel() {
     }
 
     // Insert or update into CurrencyBalance table
-    fun insertBalance(currencyId: String, amount: Double, currencySymbol: String) {
+    fun insertBalance(currencyId: String, amount: Double) {
         viewModelScope.launch {
             try {
                 val balance = balanceDao.getCurrency(currencyId)
 
                 // Balance does not exist in DB
                 if(balance == null) {
-                    balanceDao.insert(CurrencyBalance(currencyId, amount, currencySymbol))
+                    balanceDao.insert(CurrencyBalance(currencyId, amount))
                 //  Update existing balance
                 } else {
                     val newBalance = balance.amount + amount
-                    balanceDao.update(CurrencyBalance(currencyId = currencyId, amount = newBalance, symbol = currencySymbol))
+                    balanceDao.update(CurrencyBalance(currencyId = currencyId, amount = newBalance))
                 }
             } catch (e: Exception) {
                 Log.d("db", e.toString())
