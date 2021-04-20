@@ -254,8 +254,6 @@ class MainViewModel : ViewModel() {
             } catch (e: Exception) {
                 e.printStackTrace()
                 Log.d("db", "catchInit")
-            } finally {
-                Log.d("db", "finallyInit")
             }
         }
     }
