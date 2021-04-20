@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.init(this)
         initObservers()
         setOnclickListeners()
-        viewModel.fetchAssets()
+        viewModel.fetchCurrencies()
         viewModel.fetchUsdBalance()
 
 
@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.fetchAssets()
+        viewModel.fetchCurrencies()
     }
 
 

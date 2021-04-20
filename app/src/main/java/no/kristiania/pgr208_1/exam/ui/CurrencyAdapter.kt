@@ -12,6 +12,7 @@ import no.kristiania.pgr208_1.exam.data.api.domain.CryptoCurrency
 import no.kristiania.pgr208_1.exam.databinding.ItemCurrencyBinding
 import java.lang.Double.parseDouble
 import java.math.BigDecimal
+
 import java.math.RoundingMode
 
 

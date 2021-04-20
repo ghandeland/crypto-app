@@ -4,14 +4,17 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import no.kristiania.pgr208_1.exam.data.CurrencyComplete
 import no.kristiania.pgr208_1.exam.data.api.domain.CryptoCurrency
 import no.kristiania.pgr208_1.exam.data.db.entity.CurrencyBalance
 import no.kristiania.pgr208_1.exam.databinding.ItemPortfolioBinding
+import java.util.*
 
 class PortfolioAdapter() : RecyclerView.Adapter<PortfolioAdapter.PortfolioViewHolder>(){
 
-    private val portfolioBalances = mutableListOf<CurrencyBalance>()
-    private val portfolioCurrencies = mutableListOf<CryptoCurrency>()
+    private val portfolioBalances = mutableListOf<CurrencyComplete>()
+
 
 
     inner class PortfolioViewHolder (
@@ -19,16 +22,16 @@ class PortfolioAdapter() : RecyclerView.Adapter<PortfolioAdapter.PortfolioViewHo
         private val context: Context):
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(balance: CurrencyBalance, currency: CryptoCurrency) {
+        fun bind(currency: CurrencyComplete) {
             binding.apply {
                 // Load image thumbnail with glide
+                Glide
+                    .with(context)
+                    .load("https://static.coincap.io/assets/icons/${currency.id}@2x.png")
+                    .into(ivLogo)
 
-                tvName.text = "id from balance ${balance.currencyId} "
-                tvAmountAndPrice.text = "name from currency ${currency.name}"
-//                Glide
-//                    .with(context)
-//                    .load("https://static.coincap.io/assets/icons/${""}@2x.png")
-//                    .into(ivLogo)
+                tvName.text = "${currency.name} "
+                tvAmountAndPrice.text = "${currency.balance} x ${currency.priceUsd} $"
             }
 
         }
@@ -44,21 +47,16 @@ class PortfolioAdapter() : RecyclerView.Adapter<PortfolioAdapter.PortfolioViewHo
     }
 
     override fun onBindViewHolder(holder: PortfolioViewHolder, position: Int) {
-        holder.bind(portfolioBalances[position], portfolioCurrencies[position])
+        holder.bind(portfolioBalances[position])
     }
 
     override fun getItemCount(): Int {
         return portfolioBalances.size
     }
 
-    fun setPortfolioList(list: List<CurrencyBalance>) {
+    fun setPortfolioBalances(list: List<CurrencyComplete>) {
         portfolioBalances.clear()
         portfolioBalances.addAll(list)
         notifyDataSetChanged()
-    }
-
-    fun setPortfolioCurrencies(list: List<CryptoCurrency>) {
-        portfolioCurrencies.clear()
-        portfolioCurrencies.addAll(list)
     }
 }
