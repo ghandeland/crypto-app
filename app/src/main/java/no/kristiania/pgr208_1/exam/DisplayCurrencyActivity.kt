@@ -35,21 +35,22 @@ class DisplayCurrencyActivity : AppCompatActivity() {
                 .with(this)
                 .load("https://static.coincap.io/assets/icons/${currencySymbol}@2x.png")
                 .into(binding.ivLogo)
-
     }
 
     private fun setOnclickListeners() {
         binding.btnBuy.setOnClickListener {
             supportFragmentManager
                     .beginTransaction()
-                    .add(R.id.fragmentContainer, BuyFragment.newInstance(viewModel.currentCurrency.value!!.id), "BuyFragment")
+                    .replace(R.id.fragmentContainer, BuyFragment.newInstance(viewModel.currentCurrency.value!!.id))
+                    .addToBackStack(null)
                     .commit()
         }
 
         binding.btnSell.setOnClickListener {
             supportFragmentManager
                 .beginTransaction()
-                .add(R.id.fragmentContainer, SellFragment.newInstance(viewModel.currentCurrency.value!!.id), "SellFragment")
+                .replace(R.id.fragmentContainer, SellFragment.newInstance(viewModel.currentCurrency.value!!.id))
+                .addToBackStack(null)
                 .commit()
         }
 
@@ -73,5 +74,9 @@ class DisplayCurrencyActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    override fun onBackPressed() {
+        finish()
     }
 }

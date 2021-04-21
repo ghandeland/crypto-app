@@ -19,7 +19,7 @@ class PortfolioActivity : AppCompatActivity() {
         setContentView(binding.root)
         initObservers()
         viewModel.init(this)
-        viewModel.fetchUsdBalance()
+        viewModel.fetchTotalBalanceInUsd()
         viewModel.fetchPortfolio()
 
         binding.rvPortfolio.adapter = adapter
@@ -28,7 +28,7 @@ class PortfolioActivity : AppCompatActivity() {
     }
 
     private fun initObservers() {
-        viewModel.usdBalance.observe(this) { balance ->
+        viewModel.totalBalanceInUsd.observe(this) { balance ->
             binding.tvBalance.text = "Points: $balance $"
         }
 

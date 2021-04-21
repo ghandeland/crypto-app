@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import no.kristiania.pgr208_1.exam.DisplayCurrencyActivity
 import no.kristiania.pgr208_1.exam.EXTRA_CURRENCY_ID
 import no.kristiania.pgr208_1.exam.EXTRA_CURRENCY_SYMBOL
@@ -40,7 +41,7 @@ class SellFragment : Fragment() {
 
         viewModel.init(requireContext())
         viewModel.setCurrentCurrency(currencyId!!)
-        viewModel.fetchUsdBalance() // Not necessary?
+        viewModel.fetchTotalBalanceInUsd() // Not necessary?
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?

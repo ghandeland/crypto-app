@@ -44,8 +44,8 @@ class MainViewModel : ViewModel() {
     private val _completeCurrencies = MutableLiveData<List<CurrencyComplete>>()
     val completeCurrencies: LiveData<List<CurrencyComplete>> get() = _completeCurrencies
 
-    private val _usdBalance = MutableLiveData<Double>()
-    val usdBalance: LiveData<Double> get() = _usdBalance
+    private val _totalBalanceInUsd = MutableLiveData<Double>()
+    val totalBalanceInUsd: LiveData<Double> get() = _totalBalanceInUsd
 
     // Todo: Error handling
     private val _error = MutableLiveData<Unit>()
@@ -77,12 +77,9 @@ class MainViewModel : ViewModel() {
     // Fetch portfolio (all owned currencies from DB)
     fun fetchPortfolio(): Job {
         return viewModelScope.launch(Dispatchers.IO + exceptionHandler) {
+            fetchCurrencies().join() // Wait for API-fetch
 
             val portfolio = balanceDao.getPortfolio()
-
-            val currencyFetch = fetchCurrencies()
-            currencyFetch.join()
-
             // Merge currency and balance into CompleteCurrency object
             val portfolioIds = portfolio.map { it.currencyId } // Get all portfolio IDs
             val completeCurrencies = currencies.value!!
@@ -98,18 +95,16 @@ class MainViewModel : ViewModel() {
                     // Get balance fom portfolio by corresponding ID
                     balance = portfolio.find { it.currencyId == c.id }!!.amount
                 ) }.toMutableList()
-            // Manually add USD as it is not fetched from USD
+
+            // Manually add USD as it is not fetched from API
             completeCurrencies.add(0, CurrencyComplete(
-                id = "usd",
-                rank = "-",
-                symbol = "usd",
-                name = "US Dollars",
-                priceUsd = "-",
-                changePercent24Hr = "-",
-                // Get balance fom portfolio by corresponding ID
-                balance = portfolio.first { it.currencyId == "usd" }.amount
-                )
-            )
+                            "usd",
+                            "-",
+                            "usd",
+                            "US Dollars",
+                            "1",
+                            "-",
+                            portfolio.find { it.currencyId == "usd" }!!.amount))
             _completeCurrencies.postValue(completeCurrencies)
         }
     }
@@ -143,15 +138,36 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    // Calculate total portfolio balance
+    fun fetchTotalBalanceInUsd() {
+        viewModelScope.launch {
+            try {
+                fetchPortfolio().join()
+                val totalBalance = completeCurrencies.value!!.map {
+                    round(it.priceUsd.toDouble() * it.balance, 2)
+                }.sum()
+
+                _totalBalanceInUsd.postValue(round(totalBalance, 2))
+            } catch (e: Exception) {
+                Log.d("db", e.toString())
+                e.printStackTrace()
+            }
+        }
+    }
+
     // Buy usdAmount of current currency, persists transaction and new balance
     fun makeTransactionBuy(usdAmount: Double) {
         viewModelScope.launch {
             try {
                 // Retrieve currency data
                 val currency = currentCurrency.value!!
-                val currencyPrice = parseDouble(currency.priceUsd)
+                val currencyPrice = currency.priceUsd.toDouble()
                 // Dynamic round
                 val currencyAmount = round(usdAmount / currencyPrice, null)
+
+                // Persist balance
+                insertBalance(currency.id, currencyAmount)
+                insertBalance("usd", -usdAmount)
 
                 // Insert into transaction table
                 transactionDao.insert(
@@ -162,10 +178,6 @@ class MainViewModel : ViewModel() {
                         usdAmount = usdAmount,
                         isBuy = true)
                 )
-
-                // Persist balance
-                insertBalance(currencyId = currency.id, amount = currencyAmount)
-                insertBalance(currencyId = "usd", amount = (-usdAmount))
             } catch (e: Exception) {
                 Log.d("db", e.toString())
             }
@@ -179,7 +191,11 @@ class MainViewModel : ViewModel() {
                 // Retrieve currency data
                 val currency = currentCurrency.value!!
                 val currencyPrice = parseDouble(currency.priceUsd)
-                val usdAmount = round(currencyAmount * currencyPrice, null)
+                val usdAmount = round(currencyAmount * currencyPrice, 2)
+
+                // Persist balance
+                insertBalance(currencyId = currency.id, amount = -currencyAmount)
+                insertBalance(currencyId = "usd", amount = (usdAmount))
 
                 // Insert into transact ion table
                 transactionDao.insert(
@@ -190,25 +206,8 @@ class MainViewModel : ViewModel() {
                     usdAmount = usdAmount,
                     isBuy = false)
                 )
-
-                // Persist balance
-                insertBalance(currencyId = currency.id, amount = -currencyAmount)
-                insertBalance(currencyId = "usd", amount = (usdAmount))
             } catch (e: Exception) {
                 Log.d("db", e.toString())
-            }
-        }
-    }
-
-    // TODO: MAKE NEW METHOD: Convert to calculate sum of all currencies to USD
-    fun fetchUsdBalance() {
-        viewModelScope.launch {
-            try {
-                val usdBalance = balanceDao.getCurrency("usd")
-                _usdBalance.postValue(usdBalance.amount)
-            } catch (e: Exception) {
-                Log.d("db", e.toString())
-                e.printStackTrace()
             }
         }
     }
@@ -219,16 +218,14 @@ class MainViewModel : ViewModel() {
             try {
                 val balance = balanceDao.getCurrency(currencyId)
 
-                // Balance does not exist in DB
-                if(balance == null) {
+                if(balance == null) { // Balance does not exist in DB
                     balanceDao.insert(CurrencyBalance(currencyId, amount))
-                //  Update existing balance
-                } else {
+                } else { //  Update existing balance
                     val newBalance = balance.amount + amount
-                    if(newBalance <= 0) {
-                        balanceDao.delete(balance) // If no more is owned, delete from portfolio
+                    if(newBalance <= 0 && currencyId !== "usd") { // If no more is owned, delete from portfolio
+                        balanceDao.delete(balance)
                     } else {
-                        balanceDao.update(CurrencyBalance(currencyId = currencyId, amount = round(newBalance, null)))
+                        balanceDao.update(CurrencyBalance(currencyId, round(newBalance, null)))
                     }
                 }
             } catch (e: Exception) {
@@ -237,15 +234,14 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    // Make initial deposit when opening app for the first time
-    // Handled by shared preference flag in SplashActivity
+    // Make initial deposit when opening app for the first time. Called if shared preference flag is true (SplashActivity)
     fun makeInitialDeposit() {
         viewModelScope.launch {
             try {
 
                 balanceDao.insert(CurrencyBalance(currencyId = "usd", amount = 10_000.0))
                 val usdBalance = balanceDao.getCurrency("usd")
-                _usdBalance.postValue(usdBalance.amount)
+                _totalBalanceInUsd.postValue(usdBalance.amount)
                 Log.d("db", usdBalance.amount.toString())
             } catch (e: Exception) {
                 e.printStackTrace()

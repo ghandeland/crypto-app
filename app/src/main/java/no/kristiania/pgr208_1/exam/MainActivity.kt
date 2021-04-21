@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         initObservers()
         setOnclickListeners()
         viewModel.fetchCurrencies()
-        viewModel.fetchUsdBalance()
+        viewModel.fetchTotalBalanceInUsd()
 
 
         // Using the Recyclerview with LinearLayoutManager produced a bug where the individual item width did not fill the parent, therefore it is replaced here with GridLayoutManager
@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
             adapter.setCurrencyList(currencies)
         }
 
-        viewModel.usdBalance.observe(this) { balance ->
+        viewModel.totalBalanceInUsd.observe(this) { balance ->
             binding.tvBalance.text = "Points: $balance $"
         }
     }
