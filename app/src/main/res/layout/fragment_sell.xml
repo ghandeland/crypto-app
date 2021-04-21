@@ -77,18 +77,21 @@
         android:text="Sell"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/btnSellAll"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvUsdCalculated" />
 
     <Button
-        android:id="@+id/btnSellAll"
+        android:id="@+id/btnInsertAll"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="Sell all"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toStartOf="@+id/btnSell"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvUsdCalculated" />
+        android:layout_marginEnd="16dp"
+        android:text="All"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/etCurrency"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/etCurrency"
+        app:layout_constraintTop_toTopOf="@+id/etCurrency" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

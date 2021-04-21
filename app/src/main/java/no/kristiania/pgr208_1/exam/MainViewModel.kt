@@ -19,11 +19,13 @@ import no.kristiania.pgr208_1.exam.data.db.CurrencyBalanceDao
 import no.kristiania.pgr208_1.exam.data.db.CurrencyTransactionDao
 import no.kristiania.pgr208_1.exam.data.db.entity.CurrencyTransaction
 import no.kristiania.pgr208_1.exam.data.db.entity.CurrencyBalance
-import java.lang.Double.parseDouble
 
+import java.lang.Double.parseDouble
 import java.lang.Exception
 
-private const val NOT_INSERTED = "rownotinsertedearlier"
+
+
+const val NOT_INSERTED = "rownotinsertedearlier"
 
 class MainViewModel : ViewModel() {
     private val coinCapService: CoinCapService = API.coinCapService
@@ -64,13 +66,17 @@ class MainViewModel : ViewModel() {
     fun fetchCurrencies(): Job {
         return viewModelScope.launch(Dispatchers.IO + exceptionHandler) {
             val currencyList = coinCapService.getAssets()
+            // Loop through currencies and round decimal numbers with custom function
+            for(currency in currencyList.data) {
+                currency.priceUsd = round(currency.priceUsd, null)
+            }
             _currencies.postValue(currencyList.data)
         }
     }
 
     // Fetch portfolio (all owned currencies from DB)
-    fun fetchPortfolio() {
-        viewModelScope.launch(Dispatchers.IO + exceptionHandler) {
+    fun fetchPortfolio(): Job {
+        return viewModelScope.launch(Dispatchers.IO + exceptionHandler) {
 
             val portfolio = balanceDao.getPortfolio()
 
@@ -90,7 +96,7 @@ class MainViewModel : ViewModel() {
                     priceUsd = c.priceUsd,
                     changePercent24Hr = c.changePercent24Hr,
                     // Get balance fom portfolio by corresponding ID
-                    balance = portfolio.first { it.currencyId == c.id }.amount
+                    balance = portfolio.find { it.currencyId == c.id }!!.amount
                 ) }.toMutableList()
             // Manually add USD as it is not fetched from USD
             completeCurrencies.add(0, CurrencyComplete(
@@ -111,7 +117,9 @@ class MainViewModel : ViewModel() {
     // Set current currency
     fun setCurrentCurrency(currencyId: String) {
         viewModelScope.launch(Dispatchers.IO + exceptionHandler) {
+            // Fetch currency, round decimal numbers and post to livedata
             val currency = coinCapService.getAsset(currencyId).currency
+            currency.priceUsd = round(currency.priceUsd, null)
             _currentCurrency.postValue(currency)
             setCurrentCurrencyBalance(currency.id)
         }
@@ -124,18 +132,16 @@ class MainViewModel : ViewModel() {
                 val balance = balanceDao.getCurrency(currencyId)
 
                 if(balance == null) {
-                    // TODO: Activity check for NOT_INSERTED
+                    // Post to livedata with custom currencyId to signal that currency is not owned
                     _currentCurrencyBalance.postValue(CurrencyBalance(currencyId = NOT_INSERTED, amount = 0.0))
                 } else {
                     _currentCurrencyBalance.postValue(balance)
                 }
             } catch (e: Exception) {
                 Log.d("db", e.toString())
-                e.printStackTrace()
             }
         }
     }
-
 
     // Buy usdAmount of current currency, persists transaction and new balance
     fun makeTransactionBuy(usdAmount: Double) {
@@ -144,7 +150,8 @@ class MainViewModel : ViewModel() {
                 // Retrieve currency data
                 val currency = currentCurrency.value!!
                 val currencyPrice = parseDouble(currency.priceUsd)
-                val currencyAmount = usdAmount / currencyPrice
+                // Dynamic round
+                val currencyAmount = round(usdAmount / currencyPrice, null)
 
                 // Insert into transaction table
                 transactionDao.insert(
@@ -170,12 +177,11 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 // Retrieve currency data
-
                 val currency = currentCurrency.value!!
                 val currencyPrice = parseDouble(currency.priceUsd)
-                val usdAmount = currencyAmount * currencyPrice
+                val usdAmount = round(currencyAmount * currencyPrice, null)
 
-                // Insert into transaction table
+                // Insert into transact ion table
                 transactionDao.insert(
                     CurrencyTransaction(
                     currencyId = currency.id,
@@ -199,7 +205,7 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val usdBalance = balanceDao.getCurrency("usd")
-                _usdBalance.postValue(usdBalance.amount);
+                _usdBalance.postValue(usdBalance.amount)
             } catch (e: Exception) {
                 Log.d("db", e.toString())
                 e.printStackTrace()
@@ -219,22 +225,12 @@ class MainViewModel : ViewModel() {
                 //  Update existing balance
                 } else {
                     val newBalance = balance.amount + amount
-                    balanceDao.update(CurrencyBalance(currencyId = currencyId, amount = newBalance))
+                    if(newBalance <= 0) {
+                        balanceDao.delete(balance) // If no more is owned, delete from portfolio
+                    } else {
+                        balanceDao.update(CurrencyBalance(currencyId = currencyId, amount = round(newBalance, null)))
+                    }
                 }
-            } catch (e: Exception) {
-                Log.d("db", e.toString())
-            }
-        }
-    }
-
-    // Retrieve balance, sell and delete row from DB
-    fun sellAllOfCurrentCurrency() {
-        viewModelScope.launch {
-            try {
-                val balance = currentCurrencyBalance.value!!
-                makeTransactionSell(balance.amount)
-                balanceDao.delete(balance)
-
             } catch (e: Exception) {
                 Log.d("db", e.toString())
             }
@@ -249,7 +245,7 @@ class MainViewModel : ViewModel() {
 
                 balanceDao.insert(CurrencyBalance(currencyId = "usd", amount = 10_000.0))
                 val usdBalance = balanceDao.getCurrency("usd")
-                _usdBalance.postValue(usdBalance.amount);
+                _usdBalance.postValue(usdBalance.amount)
                 Log.d("db", usdBalance.amount.toString())
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -258,14 +254,14 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun convertCurrentUsdToCurrency(usdAmount: Double): Double {
+    fun convertUsdToCurrentCurrency(usdAmount: Double): Double {
         val currencyPrice = parseDouble(currentCurrency.value!!.priceUsd)
-        return usdAmount / currencyPrice
+        return round(usdAmount / currencyPrice, null)
     }
 
     fun convertCurrentCurrencyToUsd(currencyAmount: Double): Double {
         val currencyPrice = parseDouble(currentCurrency.value!!.priceUsd)
-        return currencyAmount * currencyPrice
+        return round(currencyAmount * currencyPrice, 2)
     }
 
 }

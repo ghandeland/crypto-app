@@ -18,10 +18,10 @@ data class CurrencyFetch(
 
 // Inner data class to access object properties
 data class CryptoCurrency (
-    val id: String,
-    val rank: String,
-    val symbol: String,
-    val name: String,
-    val priceUsd: String,
-    val changePercent24Hr: String
+        val id: String,
+        val rank: String,
+        val symbol: String,
+        var name: String,
+        var priceUsd: String,
+        val changePercent24Hr: String
 )

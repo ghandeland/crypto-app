@@ -3,6 +3,7 @@ package no.kristiania.pgr208_1.exam.ui
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputFilter
 import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -37,13 +38,13 @@ class SellFragment : Fragment() {
             currencyId = it.getString(ARG_CURRENCY_ID)
         }
 
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
         viewModel.init(requireContext())
         viewModel.setCurrentCurrency(currencyId!!)
         viewModel.fetchUsdBalance() // Not necessary?
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
 
         _binding = FragmentSellBinding.inflate(inflater, container, false)
 
@@ -53,6 +54,10 @@ class SellFragment : Fragment() {
 
             // TODO: Database call to check if currency is owned + Parse and format price correctly
         }
+
+        // Limit decimal amounts
+        binding.etCurrency.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(4))
+
 
         // onChangeListener to calculate crypto -> USD
         binding.etCurrency.addTextChangedListener(object : TextWatcher {
@@ -84,28 +89,12 @@ class SellFragment : Fragment() {
             sell()
         }
 
-        binding.btnSellAll.setOnClickListener {
-            sellAll()
+        binding.btnInsertAll.setOnClickListener {
+            binding.etCurrency.setText(viewModel.currentCurrencyBalance.value!!.amount.toString())
         }
 
         return binding.root
 
-    }
-
-    private fun sellAll() {
-        if(viewModel.currentCurrencyBalance.value!!.amount == 0.0) {
-            showToast("Transaction error: You do not own any of this currency")
-            return
-        }
-
-        viewModel.sellAllOfCurrentCurrency()
-
-        val currentCurrency = viewModel.currentCurrency.value!!
-        Intent(activity, DisplayCurrencyActivity::class.java).apply {
-            putExtra(EXTRA_CURRENCY_ID, currentCurrency.id.toLowerCase())
-            putExtra(EXTRA_CURRENCY_SYMBOL, currentCurrency.symbol.toLowerCase())
-            startActivity(this)
-        }
     }
 
     private fun sell() {

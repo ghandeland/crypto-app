@@ -3,6 +3,7 @@ package no.kristiania.pgr208_1.exam.ui
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputFilter
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
@@ -10,10 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import no.kristiania.pgr208_1.exam.DisplayCurrencyActivity
-import no.kristiania.pgr208_1.exam.EXTRA_CURRENCY_ID
-import no.kristiania.pgr208_1.exam.EXTRA_CURRENCY_SYMBOL
-import no.kristiania.pgr208_1.exam.MainViewModel
+import no.kristiania.pgr208_1.exam.*
 import no.kristiania.pgr208_1.exam.databinding.FragmentBuyBinding
 import java.lang.Double.parseDouble
 
@@ -49,9 +47,9 @@ class BuyFragment : Fragment() {
         // Observe fetched currency data
         viewModel.currentCurrency.observe(viewLifecycleOwner) { currency ->
             binding.tvCurrencyLabel.text = currency.symbol
-
-            // TODO: Database call to check if currency is owned + Parse and format price correctly
         }
+
+        binding.etUSD.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(2))
 
         // onChangeListener to calculate USD -> crypto
         binding.etUSD.addTextChangedListener(object : TextWatcher {
@@ -71,7 +69,7 @@ class BuyFragment : Fragment() {
                 }
 
                 // Convert to currency amount with newly fetched currency (fetched in onCreate)
-                val convertedToCurrency = viewModel.convertCurrentUsdToCurrency(usdAmount)
+                val convertedToCurrency = viewModel.convertUsdToCurrentCurrency(usdAmount)
                 binding.tvCurrencyCalculated.text = convertedToCurrency.toString()
             }
 
@@ -82,6 +80,7 @@ class BuyFragment : Fragment() {
         binding.btnBuy.setOnClickListener {
             buy()
         }
+
 
         return binding.root
 

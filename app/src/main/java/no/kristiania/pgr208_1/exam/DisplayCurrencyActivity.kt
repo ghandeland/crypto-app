@@ -56,18 +56,20 @@ class DisplayCurrencyActivity : AppCompatActivity() {
     }
 
     private fun initObservers() {
+
         viewModel.currentCurrency.observe(this) { currency ->
             binding.tvCurrencyTitle.text = "${currency.name} [${currency.symbol.toUpperCase()}]"
             binding.tvCurrencyPrice.text = "Current price: ${currency.priceUsd} \$"
-            // TODO: Database call to check if currency is owned + Parse and format price correctly
         }
 
         viewModel.currentCurrencyBalance.observe(this) { balance ->
-            if(balance.amount > 0.0) {
-                binding.tvCurrencyOwned.visibility = View.VISIBLE
-                binding.tvCurrencyOwned.text = "You currently own: ${balance.amount}"
-            } else {
+            if(balance.currencyId == NOT_INSERTED) {
                 binding.tvCurrencyOwned.visibility = View.GONE
+                binding.btnSell.isEnabled = false
+            } else {
+                binding.tvCurrencyOwned.visibility = View.VISIBLE
+                binding.tvCurrencyOwned.text = "You currently own: ${balance.amount} (${viewModel.convertCurrentCurrencyToUsd(balance.amount)} $)"
+                binding.btnSell.isEnabled = true
             }
         }
 
