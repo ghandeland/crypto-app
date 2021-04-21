@@ -19,3 +19,7 @@ fun round(number: Double, decimalAmount: Int?): Double {
 
     return BigDecimal(number).setScale(decimalAmount, RoundingMode.HALF_EVEN).toDouble()
 }
+
+fun round(number: String, decimalAmount: Int?): Double {
+    return round(number.toDouble(), decimalAmount)
+}

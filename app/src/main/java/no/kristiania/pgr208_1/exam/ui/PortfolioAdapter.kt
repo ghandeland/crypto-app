@@ -9,6 +9,7 @@ import no.kristiania.pgr208_1.exam.data.CurrencyComplete
 import no.kristiania.pgr208_1.exam.data.api.domain.CryptoCurrency
 import no.kristiania.pgr208_1.exam.data.db.entity.CurrencyBalance
 import no.kristiania.pgr208_1.exam.databinding.ItemPortfolioBinding
+import no.kristiania.pgr208_1.exam.round
 import java.util.*
 
 class PortfolioAdapter() : RecyclerView.Adapter<PortfolioAdapter.PortfolioViewHolder>(){
@@ -27,11 +28,22 @@ class PortfolioAdapter() : RecyclerView.Adapter<PortfolioAdapter.PortfolioViewHo
                 // Load image thumbnail with glide
                 Glide
                     .with(context)
-                    .load("https://static.coincap.io/assets/icons/${currency.id}@2x.png")
+                    .load("https://static.coincap.io/assets/icons/${currency.symbol.toLowerCase()}@2x.png")
                     .into(ivLogo)
 
-                tvName.text = "${currency.name} "
+                tvName.text = "${currency.name}"
+
+                // Check if currency is USD, then return before parsing price etc.
+                if(currency.id == "usd") {
+                    tvAmountAndPrice.text = ""
+                    tvWorth.text = "${currency.balance} $"
+                    return
+                }
+
                 tvAmountAndPrice.text = "${currency.balance} x ${currency.priceUsd} $"
+                val worth = currency.priceUsd.toDouble() * currency.balance.toDouble()
+                val worthRounded = round(worth, 2)
+                tvWorth.text = "= $worthRounded $"
             }
 
         }
