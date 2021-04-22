@@ -22,6 +22,7 @@ class DisplayCurrencyActivity : AppCompatActivity() {
         initObservers()
         viewModel.init(this)
         viewModel.fetchUsdBalance()
+
         // Retrieve currency ID from intent and fetch fresh data with it
         val currencyId = intent.getStringExtra(EXTRA_CURRENCY_ID)
         viewModel.setCurrentCurrency(currencyId!!)
@@ -60,6 +61,12 @@ class DisplayCurrencyActivity : AppCompatActivity() {
         viewModel.currentCurrency.observe(this) { currency ->
             binding.tvCurrencyTitle.text = "${currency.name} [${currency.symbol.toUpperCase()}]"
             binding.tvCurrencyPrice.text = "Current price: ${currency.priceUsd} \$"
+        }
+
+        viewModel.usdBalance.observe(this) { usd ->
+            binding.btnBuy.isEnabled = usd > 0.0
+
+            binding.tvUsdBalance.text = "USD balance: $usd $"
         }
 
         viewModel.currentCurrencyBalance.observe(this) { balance ->
