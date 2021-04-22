@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import no.kristiania.pgr208_1.exam.R
+import no.kristiania.pgr208_1.exam.TRANSACTION_INITIAL
 import no.kristiania.pgr208_1.exam.data.api.domain.CryptoCurrency
 import no.kristiania.pgr208_1.exam.data.db.entity.CurrencyTransaction
 import no.kristiania.pgr208_1.exam.databinding.ItemCurrencyBinding
@@ -32,7 +33,15 @@ class TransactionAdapter() : RecyclerView.Adapter<TransactionAdapter.Transaction
 
         fun bind(transaction: CurrencyTransaction) {
             binding.apply {
-                if()
+                // Check for installation reward for custom display
+                if(transaction.currencySymbol ==  TRANSACTION_INITIAL) {
+                    ivLogo.setImageResource(R.drawable.ic_money_emoji)
+                    tvTransactionType.text = "INSTALLATION REWARD"
+                    tvTransactionType.setTextColor(Color.parseColor("#fc03c6"))
+                    tvTypeAndPrice.text = "${transaction.usdAmount} $"
+                    return
+                }
+
 
 
                 // Load image thumbnail with glide
