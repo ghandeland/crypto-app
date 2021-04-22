@@ -62,6 +62,7 @@ class DecimalDigitsInputFilter(val decimalDigits: Int) : InputFilter {
     }
 }
 
+// Converters for storing LocalDateTime as String inside DB, nullable values for safety
 object DateConverters {
     @TypeConverter @JvmStatic
     fun toDate(dateString: String?): LocalDateTime? {

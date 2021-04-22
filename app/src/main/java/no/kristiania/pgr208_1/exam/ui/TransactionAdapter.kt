@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import no.kristiania.pgr208_1.exam.DateConverters
 import no.kristiania.pgr208_1.exam.R
 import no.kristiania.pgr208_1.exam.TRANSACTION_INITIAL
 import no.kristiania.pgr208_1.exam.data.api.domain.CryptoCurrency
@@ -18,6 +19,7 @@ import java.lang.Double.parseDouble
 import java.math.BigDecimal
 
 import java.math.RoundingMode
+import java.time.format.DateTimeFormatter
 
 
 // Adapter for listing the currency objects with Recyclerview
@@ -33,6 +35,15 @@ class TransactionAdapter() : RecyclerView.Adapter<TransactionAdapter.Transaction
 
         fun bind(transaction: CurrencyTransaction) {
             binding.apply {
+
+                // Parse date from DB
+                val date = DateConverters.toDate(transaction.transactionDate)
+                val dateFormatted = date?.format(DateTimeFormatter.ofPattern("dd/MM/yyyyHH:mm"))
+                if (dateFormatted != null) {
+                    tvDate.text = dateFormatted.substring(0..9)
+                    tvTime.text = dateFormatted.substring(10 until dateFormatted.length)
+                }
+
                 // Check for installation reward for custom display
                 if(transaction.currencySymbol ==  TRANSACTION_INITIAL) {
                     ivLogo.setImageResource(R.drawable.ic_money_emoji)
@@ -41,8 +52,6 @@ class TransactionAdapter() : RecyclerView.Adapter<TransactionAdapter.Transaction
                     tvTypeAndPrice.text = "${transaction.usdAmount} $"
                     return
                 }
-
-
 
                 // Load image thumbnail with glide
                 Glide
@@ -58,7 +67,6 @@ class TransactionAdapter() : RecyclerView.Adapter<TransactionAdapter.Transaction
                     tvTransactionType.setTextColor(Color.parseColor("#6d00a8"))
                 }
                 tvTypeAndPrice.text = "${transaction.currencyAmount} ${transaction.currencySymbol.toUpperCase()} for ${transaction.usdAmount} $"
-                tvDate.text = "${transaction.transactionDate}"
             }
         }
 
