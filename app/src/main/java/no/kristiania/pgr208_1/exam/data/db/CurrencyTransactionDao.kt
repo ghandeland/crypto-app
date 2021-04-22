@@ -7,7 +7,7 @@ import no.kristiania.pgr208_1.exam.data.db.entity.CurrencyTransaction
 
 @Dao
 interface CurrencyTransactionDao {
-    @Query("SELECT * FROM currency_transaction_table")
+    @Query("SELECT * FROM currency_transaction_table ORDER BY id DESC")
     suspend fun listTransactions(): List<CurrencyTransaction>
 
     @Insert
