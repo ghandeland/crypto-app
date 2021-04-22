@@ -28,7 +28,7 @@ class TransactionsActivity : AppCompatActivity() {
 
     private fun initObservers() {
         viewModel.transactions.observe(this) { transactions ->
-            adapter.setTransacitonList(transactions)
+            adapter.setTransactionList(transactions)
         }
     }
 }

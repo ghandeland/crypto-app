@@ -6,6 +6,7 @@ import androidx.room.TypeConverter
 import java.lang.Double.parseDouble
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.time.LocalDateTime
 import java.util.*
 
 const val NOT_INSERTED = "no.kristiania.pgr208_1.pgr208_1_exam.NOT_INSERTED"
@@ -63,16 +64,20 @@ class DecimalDigitsInputFilter(val decimalDigits: Int) : InputFilter {
 
 object DateConverters {
     @TypeConverter @JvmStatic
-    fun fromTimestamp(value: Long?): LocaleDateTime? {
-        return if (value == null) null else Date(value)
+    fun toDate(dateString: String?): LocalDateTime? {
+        return if (dateString == null) {
+            null
+        } else {
+            LocalDateTime.parse(dateString)
+        }
     }
 
     @TypeConverter @JvmStatic
-    fun dateToTimestamp(date: Date?): Long? {
-        return date?.time
+    fun toDateString(date: LocalDateTime?): String? {
+        return date?.toString()
     }
-
-
-
 }
+
+
+
 

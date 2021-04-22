@@ -58,6 +58,7 @@ class TransactionAdapter() : RecyclerView.Adapter<TransactionAdapter.Transaction
                     tvTransactionType.setTextColor(Color.parseColor("#6d00a8"))
                 }
                 tvTypeAndPrice.text = "${transaction.currencyAmount} ${transaction.currencySymbol.toUpperCase()} for ${transaction.usdAmount} $"
+                tvDate.text = "${transaction.transactionDate}"
             }
         }
 
@@ -78,7 +79,7 @@ class TransactionAdapter() : RecyclerView.Adapter<TransactionAdapter.Transaction
         return transactions.size
     }
 
-    fun setTransacitonList(list: List<CurrencyTransaction>) {
+    fun setTransactionList(list: List<CurrencyTransaction>) {
         transactions.clear()
         transactions.addAll(list)
         notifyDataSetChanged()

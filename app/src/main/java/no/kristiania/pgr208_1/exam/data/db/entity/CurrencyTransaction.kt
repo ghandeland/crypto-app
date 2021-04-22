@@ -3,6 +3,7 @@ package no.kristiania.pgr208_1.exam.data.db.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.time.LocalDateTime
 import java.util.*
 
 
@@ -15,5 +16,5 @@ data class CurrencyTransaction(
     val currencyPrice: Double,
     val usdAmount: Double,
     val isBuy: Boolean,
-    val transactionDate: Date
+    val transactionDate: String?
     )

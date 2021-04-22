@@ -19,9 +19,12 @@ import no.kristiania.pgr208_1.exam.data.db.CurrencyBalanceDao
 import no.kristiania.pgr208_1.exam.data.db.CurrencyTransactionDao
 import no.kristiania.pgr208_1.exam.data.db.entity.CurrencyTransaction
 import no.kristiania.pgr208_1.exam.data.db.entity.CurrencyBalance
+import java.time.LocalDateTime
+
 
 import java.lang.Double.parseDouble
 import java.lang.Exception
+import java.time.LocalDate
 import java.util.*
 
 
@@ -195,7 +198,9 @@ class MainViewModel : ViewModel() {
                         currencyAmount = currencyAmount,
                         currencyPrice = currencyPrice,
                         usdAmount = usdAmount,
-                        isBuy = true,)
+                        isBuy = true,
+                        transactionDate = DateConverters.toDateString(LocalDateTime.now())
+                    )
                 )
             } catch (e: Exception) {
                 Log.d("db", e.toString())
@@ -223,7 +228,9 @@ class MainViewModel : ViewModel() {
                     currencyAmount = currencyAmount,
                     currencyPrice = currencyPrice,
                     usdAmount = usdAmount,
-                    isBuy = false)
+                    isBuy = false,
+                    transactionDate = DateConverters.toDateString(LocalDateTime.now())
+                        )
                 )
             } catch (e: Exception) {
                 Log.d("db", e.toString())
@@ -264,7 +271,9 @@ class MainViewModel : ViewModel() {
                         currencyAmount = 10000.0,
                         currencyPrice = 1.0,
                         usdAmount = 10000.0,
-                        isBuy = false)
+                        isBuy = false,
+                        transactionDate = DateConverters.toDateString(LocalDateTime.now())
+                    )
                 )
 
             } catch (e: Exception) {
