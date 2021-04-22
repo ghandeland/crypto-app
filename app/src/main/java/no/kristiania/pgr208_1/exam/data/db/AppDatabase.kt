@@ -4,12 +4,15 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import no.kristiania.pgr208_1.exam.DateConverters
 import no.kristiania.pgr208_1.exam.data.db.entity.CurrencyTransaction
 import no.kristiania.pgr208_1.exam.data.db.entity.CurrencyBalance
 
 const val DATABASE_NAME = "crypto_app_db"
 
 @Database(entities = [CurrencyBalance::class, CurrencyTransaction::class], version = 1)
+@TypeConverters(DateConverters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun currencyTransactionDao() : CurrencyTransactionDao
     abstract fun currencyBalanceDao() : CurrencyBalanceDao

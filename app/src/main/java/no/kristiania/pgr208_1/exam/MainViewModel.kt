@@ -195,7 +195,7 @@ class MainViewModel : ViewModel() {
                         currencyAmount = currencyAmount,
                         currencyPrice = currencyPrice,
                         usdAmount = usdAmount,
-                        isBuy = true)
+                        isBuy = true,)
                 )
             } catch (e: Exception) {
                 Log.d("db", e.toString())

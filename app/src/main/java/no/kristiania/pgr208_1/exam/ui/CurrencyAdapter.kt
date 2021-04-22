@@ -64,7 +64,7 @@ class CurrencyAdapter(private val onItemClicked: (CryptoCurrency) -> Unit) :
                         ivArrow.visibility = View.VISIBLE
                     }
                     else -> {
-                        tvPercentage.setTextColor(Color.parseColor("#000000"))
+                        tvPercentage.setTextColor(Color.parseColor("#FFFFFF"))
                         ivArrow.visibility = View.INVISIBLE
                     }
                 }
