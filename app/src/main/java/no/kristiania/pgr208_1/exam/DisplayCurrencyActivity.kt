@@ -21,8 +21,7 @@ class DisplayCurrencyActivity : AppCompatActivity() {
         setOnclickListeners()
         initObservers()
         viewModel.init(this)
-
-        // TODO: Try/Catch and return to parent activity (Note)
+        viewModel.fetchUsdBalance()
         // Retrieve currency ID from intent and fetch fresh data with it
         val currencyId = intent.getStringExtra(EXTRA_CURRENCY_ID)
         viewModel.setCurrentCurrency(currencyId!!)

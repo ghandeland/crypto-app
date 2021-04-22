@@ -22,10 +22,10 @@ import no.kristiania.pgr208_1.exam.data.db.entity.CurrencyBalance
 
 import java.lang.Double.parseDouble
 import java.lang.Exception
+import java.util.*
 
 
 
-const val NOT_INSERTED = "rownotinsertedearlier"
 
 class MainViewModel : ViewModel() {
     private val coinCapService: CoinCapService = API.coinCapService
@@ -46,6 +46,12 @@ class MainViewModel : ViewModel() {
 
     private val _totalBalanceInUsd = MutableLiveData<Double>()
     val totalBalanceInUsd: LiveData<Double> get() = _totalBalanceInUsd
+
+    private val _usdBalance = MutableLiveData<Double>()
+    val usdBalance: LiveData<Double> get() = _usdBalance
+
+    private val _transactions = MutableLiveData<List<CurrencyTransaction>>()
+    val transactions: LiveData<List<CurrencyTransaction>> get() = _transactions
 
     // Todo: Error handling
     private val _error = MutableLiveData<Unit>()
@@ -155,6 +161,19 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    // Calculate total portfolio balance
+    fun fetchUsdBalance() {
+        viewModelScope.launch {
+            try {
+                val usd = balanceDao.getCurrency("usd")
+                _usdBalance.postValue(round(usd.amount, 2))
+            } catch (e: Exception) {
+                Log.d("db", e.toString())
+                e.printStackTrace()
+            }
+        }
+    }
+
     // Buy usdAmount of current currency, persists transaction and new balance
     fun makeTransactionBuy(usdAmount: Double) {
         viewModelScope.launch {
@@ -172,7 +191,7 @@ class MainViewModel : ViewModel() {
                 // Insert into transaction table
                 transactionDao.insert(
                     CurrencyTransaction(
-                        currencyId = currency.id,
+                        currencySymbol = currency.symbol,
                         currencyAmount = currencyAmount,
                         currencyPrice = currencyPrice,
                         usdAmount = usdAmount,
@@ -200,7 +219,7 @@ class MainViewModel : ViewModel() {
                 // Insert into transact ion table
                 transactionDao.insert(
                     CurrencyTransaction(
-                    currencyId = currency.id,
+                    currencySymbol = currency.symbol,
                     currencyAmount = currencyAmount,
                     currencyPrice = currencyPrice,
                     usdAmount = usdAmount,
@@ -238,17 +257,33 @@ class MainViewModel : ViewModel() {
     fun makeInitialDeposit() {
         viewModelScope.launch {
             try {
-
                 balanceDao.insert(CurrencyBalance(currencyId = "usd", amount = 10_000.0))
-                val usdBalance = balanceDao.getCurrency("usd")
-                _totalBalanceInUsd.postValue(usdBalance.amount)
-                Log.d("db", usdBalance.amount.toString())
+                transactionDao.insert(
+                    CurrencyTransaction(
+                        currencySymbol = TRANSACTION_INITIAL,
+                        currencyAmount = 10000.0,
+                        currencyPrice = 1.0,
+                        usdAmount = 10000.0,
+                        isBuy = false)
+                )
+
             } catch (e: Exception) {
-                e.printStackTrace()
                 Log.d("db", "catchInit")
             }
         }
     }
+
+
+    fun fetchTransactions() {
+        viewModelScope.launch {
+            try {
+                val transactions = transactionDao.listTransactions()
+                _transactions.postValue(transactions)
+            } catch (e: Exception) {
+                Log.d("db", e.toString())
+                e.printStackTrace()
+            }
+        } }
 
     fun convertUsdToCurrentCurrency(usdAmount: Double): Double {
         val currencyPrice = parseDouble(currentCurrency.value!!.priceUsd)

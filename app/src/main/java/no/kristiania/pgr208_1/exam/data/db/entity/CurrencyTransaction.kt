@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
 data class CurrencyTransaction(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-    val currencyId: String,
+    val currencySymbol: String,
     val currencyAmount: Double,
     val currencyPrice: Double,
     val usdAmount: Double,

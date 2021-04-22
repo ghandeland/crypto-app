@@ -20,10 +20,6 @@ import no.kristiania.pgr208_1.exam.*
 import no.kristiania.pgr208_1.exam.databinding.FragmentSellBinding
 import java.lang.Double
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-
 private const val ARG_CURRENCY_ID = "currencySymbol"
 
 class SellFragment : Fragment() {
@@ -41,7 +37,6 @@ class SellFragment : Fragment() {
 
         viewModel.init(requireContext())
         viewModel.setCurrentCurrency(currencyId!!)
-        viewModel.fetchTotalBalanceInUsd() // Not necessary?
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?

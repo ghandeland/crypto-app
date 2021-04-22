@@ -8,6 +8,12 @@ import java.math.RoundingMode
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
+const val NOT_INSERTED = "no.kristiania.pgr208_1.pgr208_1_exam.NOT_INSERTED"
+const val TRANSACTION_INITIAL = "no.kristiania.pgr208_1.pgr208_1_exam.TRANSACTION_INITIAL"
+const val EXTRA_CURRENCY_ID = "no.kristiania.pgr208_1.pgr208_1_exam.CURRENCY_ID"
+const val EXTRA_CURRENCY_SYMBOL = "no.kristiania.pgr208_1.pgr208_1_exam.CURRENCY_SYMBOL"
+
+
 fun round(number: Double, decimalAmount: Int?): Double {
     val doubleString = number.toString()
     val digitsLeftOfDot = doubleString.indexOf('.')

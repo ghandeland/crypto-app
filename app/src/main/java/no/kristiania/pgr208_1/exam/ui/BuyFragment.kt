@@ -40,7 +40,7 @@ class BuyFragment : Fragment() {
     ): View? {
         viewModel.init(requireContext())
         viewModel.setCurrentCurrency(currencyId!!)
-        viewModel.fetchTotalBalanceInUsd()
+        viewModel.fetchUsdBalance()
 
         _binding = FragmentBuyBinding.inflate(inflater, container, false)
 
@@ -101,7 +101,7 @@ class BuyFragment : Fragment() {
             binding.tvCurrencyCalculated.text = ""
             showToast("Transaction error: USD sum cannot be 0 or negative")
             return
-        } else if(usdAmount > viewModel.totalBalanceInUsd.value!!) {
+        } else if(usdAmount > viewModel.usdBalance.value!!) {
             showToast("Transaction error: Insufficient balance")
             return
         }

@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import no.kristiania.pgr208_1.exam.databinding.ActivityMainBinding
 import no.kristiania.pgr208_1.exam.ui.CurrencyAdapter
 
-const val EXTRA_CURRENCY_ID = "no.kristiania.pgr208_1.pgr208_1_exam.CURRENCY_ID"
-const val EXTRA_CURRENCY_SYMBOL = "no.kristiania.pgr208_1.pgr208_1_exam.CURRENCY_SYMBOL"
+
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -63,6 +63,4 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         viewModel.fetchCurrencies()
     }
-
-
 }

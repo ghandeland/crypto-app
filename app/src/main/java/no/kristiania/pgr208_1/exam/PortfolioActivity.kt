@@ -1,5 +1,6 @@
 package no.kristiania.pgr208_1.exam
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -25,6 +26,10 @@ class PortfolioActivity : AppCompatActivity() {
         binding.rvPortfolio.adapter = adapter
         // See MainActivity RV for explanation
         binding.rvPortfolio.layoutManager = GridLayoutManager(this, 1)
+
+        binding.btnTransactions.setOnClickListener {
+            Intent(this, TransactionsActivity::class.java).apply { startActivity(this) }
+        }
     }
 
     private fun initObservers() {
