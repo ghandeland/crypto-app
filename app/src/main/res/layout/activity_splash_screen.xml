@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="150dp"
-        android:text="Virtual Crypto App"
+        android:text="@string/splash_title"
         android:textColor="@color/orange"
         android:textSize="35sp"
         app:layout_constraintBottom_toBottomOf="parent"

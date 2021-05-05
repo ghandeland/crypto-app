@@ -14,4 +14,14 @@
     <string name="usd">USD</string>
     <string name="sell">Sell</string>
     <string name="all">All</string>
+    <string name="buy">buy</string>
+    <string name="transactions">Transactions</string>
+    <string name="splash_title">Virtual Crypto App</string>
+    <string name="portfolio_description">Your points are the sum of the current value of all the currencies in your portfolio converted to USD</string>
+    <string name="portfolio">Portfolio</string>
+    <string name="points_placeholder">Points: - $</string>
+    <string name="usd_balance_placeholder">USD balance: - $</string>
+    <string name="current_price_placeholder">Current price: - $</string>
+    <string name="logo_contentdesc">Cryptocurrency logo</string>
+    <string name="arrow_icon_contentdesc">Arrow icon pointing up or down</string>
 </resources>
