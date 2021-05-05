@@ -1,5 +1,6 @@
 package no.kristiania.pgr208_1.exam
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -83,6 +84,7 @@ class DisplayCurrencyActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        finish()
+        val intent = Intent(this, MainActivity::class.java);
+        startActivity(intent);
     }
 }

@@ -22,7 +22,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="TestCoin"
         android:textColor="@color/white"
         android:textFontWeight="900"
         android:textSize="16sp"
@@ -37,7 +36,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:text="0.2431 x 6737.33 $"
         android:textColor="@color/white"
 
         android:textSize="14sp"
@@ -53,9 +51,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:text="Worth: 3774 $"
         android:textColor="@color/white"
-
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
