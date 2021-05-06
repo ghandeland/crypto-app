@@ -31,8 +31,6 @@ class SplashScreenActivity : AppCompatActivity() {
         val sharedPref = getPreferences(Context.MODE_PRIVATE) ?: return
         val makeInitialTransaction = sharedPref.getBoolean(TRANSACTION_FLAG_KEY, true)
 
-        Log.d("db", makeInitialTransaction.toString())
-
         // If stored key is not found or true, make the initial deposit to the DB
         if(makeInitialTransaction) {
             viewModel.makeInitialDeposit()

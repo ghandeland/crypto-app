@@ -63,4 +63,10 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         viewModel.fetchCurrencies()
     }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finishAffinity() // or finish()
+
+    }
 }

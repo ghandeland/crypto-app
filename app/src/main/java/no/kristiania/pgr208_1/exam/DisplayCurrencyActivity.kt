@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
+import androidx.core.view.isEmpty
 import com.bumptech.glide.Glide
 import no.kristiania.pgr208_1.exam.databinding.ActivityDisplayCurrencyBinding
 import no.kristiania.pgr208_1.exam.ui.BuyFragment
@@ -42,7 +43,7 @@ class DisplayCurrencyActivity : AppCompatActivity() {
         binding.btnBuy.setOnClickListener {
             supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.fragmentContainer, BuyFragment.newInstance(viewModel.currentCurrency.value!!.id))
+                    .add(R.id.fragmentContainer, BuyFragment.newInstance(viewModel.currentCurrency.value!!.id))
                     .addToBackStack(null)
                     .commit()
         }
@@ -50,7 +51,7 @@ class DisplayCurrencyActivity : AppCompatActivity() {
         binding.btnSell.setOnClickListener {
             supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.fragmentContainer, SellFragment.newInstance(viewModel.currentCurrency.value!!.id))
+                .add(R.id.fragmentContainer, SellFragment.newInstance(viewModel.currentCurrency.value!!.id))
                 .addToBackStack(null)
                 .commit()
         }
@@ -84,7 +85,13 @@ class DisplayCurrencyActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        val intent = Intent(this, MainActivity::class.java);
-        startActivity(intent);
+        if(binding.fragmentContainer.isEmpty()) {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        } else {
+            finish()
+            startActivity(intent)
+        }
+
     }
 }

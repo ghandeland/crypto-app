@@ -18,7 +18,7 @@ import no.kristiania.pgr208_1.exam.EXTRA_CURRENCY_SYMBOL
 import no.kristiania.pgr208_1.exam.MainViewModel
 import no.kristiania.pgr208_1.exam.*
 import no.kristiania.pgr208_1.exam.databinding.FragmentSellBinding
-import java.lang.Double
+import kotlin.Double
 
 private const val ARG_CURRENCY_ID = "currencySymbol"
 
@@ -66,7 +66,7 @@ class SellFragment : Fragment() {
                 }
 
                 // Not empty - Parse to double and check if number is negative or 0
-                val currencyAmount = Double.parseDouble(binding.etCurrency.text.toString())
+                val currencyAmount = binding.etCurrency.text.toString().toDouble()
                 if (currencyAmount <= 0.0) {
                     binding.tvUsdCalculated.text = ""
                     return
@@ -103,7 +103,7 @@ class SellFragment : Fragment() {
         }
 
         // Not empty - Parse to double and check if number is negative or 0
-        val currencyAmount = Double.parseDouble(binding.etCurrency.text.toString())
+        val currencyAmount = binding.etCurrency.text.toString().toDouble()
         if (currencyAmount <= 0.0) {
             binding.tvUsdCalculated.text = ""
             showToast("Transaction error: Currency sum cannot be 0 or negative")
@@ -138,8 +138,6 @@ class SellFragment : Fragment() {
                         putString(ARG_CURRENCY_ID, currencyId)
                     }
                 }
-        // BuyFragment()
-
     }
 
     private fun showToast(text: String) {

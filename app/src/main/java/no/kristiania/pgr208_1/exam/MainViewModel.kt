@@ -277,7 +277,7 @@ class MainViewModel : ViewModel() {
                 )
 
             } catch (e: Exception) {
-                Log.d("db", "catchInit")
+                Log.d("db", e.toString())
             }
         }
     }
