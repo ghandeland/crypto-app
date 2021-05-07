@@ -41,7 +41,7 @@ class SplashScreenActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
-        }, 50)
+        }, 2000)
     }
 
     private fun toggleTransaction(makeNewTransactionNextStartup: Boolean) {
