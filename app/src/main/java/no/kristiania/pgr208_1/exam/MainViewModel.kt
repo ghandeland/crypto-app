@@ -188,8 +188,8 @@ class MainViewModel : ViewModel() {
                 val currencyAmount = round(usdAmount / currencyPrice, null)
 
                 // Persist balance
-                insertBalance(currency.id, currencyAmount)
-                insertBalance("usd", -usdAmount)
+                val currencyInsert = insertBalance(currency.id, currencyAmount)
+                val insertJob = insertBalance("usd", -usdAmount)
 
                 // Insert into transaction table
                 transactionDao.insert(
@@ -202,8 +202,13 @@ class MainViewModel : ViewModel() {
                         transactionDate = DateConverters.toDateString(LocalDateTime.now())
                     )
                 )
-                fetchUsdBalance()
+
+                // Wait for insert jobs before updating values
+                currencyInsert.join()
                 setCurrentCurrency(currentCurrency.value!!.id)
+
+                insertJob.join()
+                fetchUsdBalance()
             } catch (e: Exception) {
                 Log.d("db", e.toString())
             }
@@ -220,8 +225,8 @@ class MainViewModel : ViewModel() {
                 val usdAmount = round(currencyAmount * currencyPrice, 2)
 
                 // Persist balance
-                insertBalance(currencyId = currency.id, amount = -currencyAmount)
-                insertBalance(currencyId = "usd", amount = (usdAmount))
+                val currencyInsert = insertBalance(currencyId = currency.id, amount = -currencyAmount)
+                val usdInsert = insertBalance(currencyId = "usd", amount = (usdAmount))
 
                 // Insert into transact ion table
                 transactionDao.insert(
@@ -234,8 +239,13 @@ class MainViewModel : ViewModel() {
                     transactionDate = DateConverters.toDateString(LocalDateTime.now())
                         )
                 )
-                fetchUsdBalance()
+
+                // Wait for insert before updating values
+                currencyInsert.join()
                 setCurrentCurrency(currentCurrency.value!!.id)
+
+                usdInsert.join()
+                fetchUsdBalance()
             } catch (e: Exception) {
                 Log.d("db", e.toString())
             }
@@ -243,8 +253,8 @@ class MainViewModel : ViewModel() {
     }
 
     // Insert or update into CurrencyBalance table
-    private fun insertBalance(currencyId: String, amount: Double) {
-        viewModelScope.launch {
+    private fun insertBalance (currencyId: String, amount: Double): Job {
+        return viewModelScope.launch {
             try {
                 val balance = balanceDao.getCurrency(currencyId)
 

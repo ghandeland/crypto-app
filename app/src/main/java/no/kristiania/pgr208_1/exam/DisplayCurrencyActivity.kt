@@ -87,12 +87,12 @@ class DisplayCurrencyActivity : AppCompatActivity() {
 
     }
 
-    override fun onBackPressed() {
-        initObservers()
-        viewModel.fetchUsdBalance()
-        viewModel.setCurrentCurrencyBalance(currencyId)
-        super.onBackPressed()
-    }
+//    override fun onBackPressed() {
+//        initObservers()
+//        viewModel.fetchUsdBalance()
+//        viewModel.setCurrentCurrencyBalance(currencyId)
+//        super.onBackPressed()
+//    }
 
     fun sell(currencyAmount: Double) {
         viewModel.makeTransactionSell(currencyAmount)
