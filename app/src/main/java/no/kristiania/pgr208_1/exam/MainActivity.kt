@@ -62,11 +62,12 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         viewModel.fetchCurrencies()
+        viewModel.fetchTotalBalanceInUsd()
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
-        finishAffinity() // or finish()
+        finish()
 
     }
 }

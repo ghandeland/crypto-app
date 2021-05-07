@@ -15,6 +15,9 @@ class DisplayCurrencyActivity : AppCompatActivity() {
 
     private val viewModel: MainViewModel by viewModels()
     private lateinit var binding: ActivityDisplayCurrencyBinding
+    private lateinit var currencyId: String
+    private lateinit var currencySymbol: String
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,17 +25,17 @@ class DisplayCurrencyActivity : AppCompatActivity() {
         setContentView(binding.root)
         setOnclickListeners()
         initObservers()
+        // Get extras to retrieve currency info from Viewmodel
+        currencyId = intent.getStringExtra(EXTRA_CURRENCY_ID)!!
+        currencySymbol = intent.getStringExtra(EXTRA_CURRENCY_SYMBOL)!!
+
         viewModel.init(this)
         viewModel.fetchUsdBalance()
 
         // Retrieve currency ID from intent and fetch fresh data with it
-        val currencyId = intent.getStringExtra(EXTRA_CURRENCY_ID)
-        viewModel.setCurrentCurrency(currencyId!!)
+        viewModel.setCurrentCurrency(currencyId)
 
-
-        // Retrieve currency symbol from intent and load currency logo with Glide
-        val currencySymbol = intent.getStringExtra(EXTRA_CURRENCY_SYMBOL)
-
+        // Load currency logo with Glide
         Glide
                 .with(this)
                 .load("https://static.coincap.io/assets/icons/${currencySymbol}@2x.png")
@@ -85,13 +88,18 @@ class DisplayCurrencyActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if(binding.fragmentContainer.isEmpty()) {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-        } else {
-            finish()
-            startActivity(intent)
-        }
-
+        initObservers()
+        viewModel.fetchUsdBalance()
+        viewModel.setCurrentCurrencyBalance(currencyId)
+        super.onBackPressed()
     }
+
+    fun sell(currencyAmount: Double) {
+        viewModel.makeTransactionSell(currencyAmount)
+    }
+
+    fun buy(usdAmount: Double) {
+        viewModel.makeTransactionBuy(usdAmount)
+    }
+
 }

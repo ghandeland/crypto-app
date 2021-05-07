@@ -130,7 +130,7 @@ class MainViewModel : ViewModel() {
     }
 
     // If currency exists in balance table, set current balance
-    private fun setCurrentCurrencyBalance(currencyId: String) {
+    fun setCurrentCurrencyBalance(currencyId: String) {
         viewModelScope.launch {
             try {
                 val balance = balanceDao.getCurrency(currencyId)
@@ -202,6 +202,8 @@ class MainViewModel : ViewModel() {
                         transactionDate = DateConverters.toDateString(LocalDateTime.now())
                     )
                 )
+                fetchUsdBalance()
+                setCurrentCurrency(currentCurrency.value!!.id)
             } catch (e: Exception) {
                 Log.d("db", e.toString())
             }
@@ -232,6 +234,8 @@ class MainViewModel : ViewModel() {
                     transactionDate = DateConverters.toDateString(LocalDateTime.now())
                         )
                 )
+                fetchUsdBalance()
+                setCurrentCurrency(currentCurrency.value!!.id)
             } catch (e: Exception) {
                 Log.d("db", e.toString())
             }

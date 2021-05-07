@@ -16,14 +16,13 @@
         <activity
             android:name=".PortfolioActivity"
             android:label="@string/title_activity_portfolio"
-            android:theme="@style/Theme.PGR2081_Exam.NoActionBar" />
+            />
         <activity
             android:name=".DisplayCurrencyActivity"
             android:parentActivityName=".MainActivity" />
         <activity android:name=".SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

@@ -1,24 +1,17 @@
 package no.kristiania.pgr208_1.exam.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
-import no.kristiania.pgr208_1.exam.DisplayCurrencyActivity
-import no.kristiania.pgr208_1.exam.EXTRA_CURRENCY_ID
-import no.kristiania.pgr208_1.exam.EXTRA_CURRENCY_SYMBOL
-import no.kristiania.pgr208_1.exam.MainViewModel
 import no.kristiania.pgr208_1.exam.*
 import no.kristiania.pgr208_1.exam.databinding.FragmentSellBinding
-import kotlin.Double
 
 private const val ARG_CURRENCY_ID = "currencySymbol"
 
@@ -113,15 +106,9 @@ class SellFragment : Fragment() {
             return
         }
 
-        viewModel.makeTransactionSell(currencyAmount)
-
-        // Retrieve currency data and send it back to parent activity to restart
-        val currentCurrency = viewModel.currentCurrency.value!!
-        Intent(activity, DisplayCurrencyActivity::class.java).apply {
-            putExtra(EXTRA_CURRENCY_ID, currentCurrency.id.toLowerCase())
-            putExtra(EXTRA_CURRENCY_SYMBOL, currentCurrency.symbol.toLowerCase())
-            startActivity(this)
-        }
+        // Sell method in activity because fragment is destroyed before Viewmodel method is called
+        (activity as DisplayCurrencyActivity).sell(currencyAmount);
+        requireActivity().onBackPressed()
     }
 
     // Destroy binding, so that  the field only is valid between onCreateView and onDestroyView

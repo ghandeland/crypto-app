@@ -106,16 +106,19 @@ class BuyFragment : Fragment() {
             return
         }
 
-        viewModel.makeTransactionBuy(usdAmount)
+
 
         // Retrieve currency data and send it back to parent activity to restart
-        val currentCurrency = viewModel.currentCurrency.value!!
-        Intent(activity, DisplayCurrencyActivity::class.java).apply {
-            putExtra(EXTRA_CURRENCY_ID, currentCurrency.id.toLowerCase())
-            putExtra(EXTRA_CURRENCY_SYMBOL, currentCurrency.symbol.toLowerCase())
-            startActivity(this)
-        }
+//        val currentCurrency = viewModel.currentCurrency.value!!
+//        Intent(activity, DisplayCurrencyActivity::class.java).apply {
+//            putExtra(EXTRA_CURRENCY_ID, currentCurrency.id.toLowerCase())
+//            putExtra(EXTRA_CURRENCY_SYMBOL, currentCurrency.symbol.toLowerCase())
+//            startActivity(this)
+//        }
 
+        // Buy method in activity because fragment is destroyed before Viewmodel method is called
+        (activity as DisplayCurrencyActivity).buy(usdAmount);
+        requireActivity().onBackPressed()
     }
 
     // Destroy binding, so that  the field only is valid between onCreateView and onDestroyView
