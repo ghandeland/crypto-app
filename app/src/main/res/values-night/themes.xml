@@ -6,7 +6,7 @@
         <item name="colorPrimaryVariant">@color/secondaryblack</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/orange</item>
+        <item name="colorSecondary">@color/mainred</item>
         <item name="colorSecondaryVariant">@color/green</item>
         <item name="colorOnSecondary">@color/secondarygray</item>
         <!-- Status bar color. -->
@@ -16,7 +16,7 @@
     </style>
 
     <style name="MyCustomButton" parent="Widget.AppCompat.Button">
-        <item name="android:background">@color/orange</item>
+        <item name="android:background">@color/mainred</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textStyle">bold</item>
         <item name="android:paddingLeft">16dp</item>

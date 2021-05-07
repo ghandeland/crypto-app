@@ -3,12 +3,9 @@
     <color name="mainblack">#1a1a1a</color>
     <color name="secondaryblack">#080808</color>
     <color name="secondarygray">#c9c9c9</color>
-
-    <color name="orange">#e08702</color>
-    <color name="orangedark">#ba7000</color>
-
+    <color name="mainred">#db4b42</color>
     <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="white">#f5f5f5</color>
     <color name="green">#1ebf06</color>
     <color name="red">#cc0700</color>
 

@@ -5,6 +5,6 @@
         <item name="android:textColor">@color/green</item>
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:background">@color/orange</item>
+        <item name="android:background">@color/mainred</item>
     </style>
 </resources>

@@ -32,6 +32,14 @@ class PortfolioActivity : AppCompatActivity() {
         }
     }
 
+    // Update data when resuming from transaction-activity
+    override fun onResume() {
+        super.onResume()
+        viewModel.fetchTotalBalanceInUsd()
+        viewModel.fetchPortfolio()
+    }
+
+
     private fun initObservers() {
         viewModel.totalBalanceInUsd.observe(this) { balance ->
             binding.tvBalance.text = "Points: $balance $"

@@ -5,12 +5,14 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
+        <item name="android:navigationBarColor">@color/secondaryblack</item>
+
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/orange</item>
+        <item name="colorPrimary">@color/mainred</item>
         <item name="colorPrimaryVariant">@color/secondaryblack</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/orange</item>
+        <item name="colorSecondary">@color/mainred</item>
         <item name="colorSecondaryVariant">@color/green</item>
         <item name="colorOnSecondary">@color/secondarygray</item>
         <!-- Status bar color. -->
