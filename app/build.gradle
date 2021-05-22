@@ -1,6 +1,9 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+
+    // Added kapt to access Moshi
+    id 'kotlin-kapt'
 }
 
 android {
@@ -24,11 +27,17 @@ android {
         }
     }
     compileOptions {
+        // Flag to enable language desugaring for date-functionality in DB (Does not work on Min-API 24 without desugaring)
+        coreLibraryDesugaringEnabled true
+
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+    buildFeatures {
+        viewBinding true
     }
 }
 
@@ -39,7 +48,44 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.3.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.4'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.4'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    // All dependencies below are added in addition to the default project setup
+
+    // Viewmodel / Livedata / Activity
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.3.1"
+    implementation "androidx.activity:activity-ktx:1.2.0"
+
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
+    implementation "com.squareup.retrofit2:converter-moshi:2.9.0"
+
+    // Moshi
+    implementation "com.squareup.moshi:moshi:1.11.0"
+    implementation "com.squareup.moshi:moshi-kotlin:1.11.0"
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:1.11.0"
+
+    // Recyclerview
+    implementation "androidx.recyclerview:recyclerview:1.2.0"
+
+    // Glide
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
+
+    // Room
+    implementation "androidx.room:room-runtime:2.2.6"
+    kapt "androidx.room:room-compiler:2.2.6"
+    implementation "androidx.room:room-ktx:2.2.6"
+
+    // Fragment
+    implementation "androidx.fragment:fragment-ktx:1.3.2"
+
+    // Desugaring to access date-functionality on lower API
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.9'
 }
